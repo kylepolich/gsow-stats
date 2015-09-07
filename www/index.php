@@ -1,4 +1,7 @@
 <?php
+  ini_set('display_errors',1);
+  ini_set('display_startup_errors',1);
+  error_reporting(-1);
   include("header.php");
   if (isset($_POST['edit_id'])) {
     $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'];
@@ -14,8 +17,22 @@
        " and t3.project='en' " .
        "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid";
   $result = mysqli_query($conn, $q);
-  //echo($q);
-  echo("<table border=1><thead><tr><th>Page</th><th>First edit</th><th>Page Views from</th><th>To</th><th>Total Views</th><th>Last 30 days</th><th>Last 7 days</th></tr></thead><tbody>");
+?>
+  <table id="myTable" class="tablesorter">
+    <thead>
+      <tr>
+        <th>Page</th>
+        <th>First edit</th>
+        <th>Page Views from</th>
+        <th>To</th>
+        <th>Total Views</th>
+        <th>Last 30 days</th>
+        <th>Last 7 days</th>
+        <th> </th>
+      </tr>
+    </thead>
+    <tbody>
+<?php
   while ($row = mysqli_fetch_array($result)) {
     echo("<tr>");
     echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . "</td>");
@@ -28,6 +45,14 @@
     echo("<td><form action='index.php' method=post><input type='hidden' name='edit_id' value='" . $row['edit_id'] . "' /><input type='submit' value='delete' /></form></td>");
     echo("</tr>");
   }
-  echo("</tbody></table>");
+?>
+    </tbody>
+  </table>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#myTable").tablesorter();
+});
+</script>
+<?php
   include("footer.php");
 ?>
