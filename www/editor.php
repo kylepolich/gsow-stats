@@ -6,7 +6,7 @@ $result = mysqli_query($conn, "SELECT t2.* from editor t1 join contributions t2 
 echo("<table border=1>");
 while ($row = mysqli_fetch_array($result)) {
   echo("<tr>");
-  echo("<td>" . $row['title'] . "</td>");
+  echo("<td><a href='page.php?pageid=" . $row['pageid'] . "'>" . $row['title'] . "</a></td>");
   echo("<td>" . $row['timestamp'] . "</td>");
   echo("<td>" . $row['comment'] . "</td>");
   echo("</tr>");
