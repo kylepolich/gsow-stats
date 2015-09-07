@@ -24,7 +24,7 @@ url2 = '&uclimit=5000&ucdir=newer&format=json'
 
 cache = {}
 
-query = "select * from edits where pageid is null limit 10"
+query = "select * from edits where pageid is null"
 df = pd.read_sql(query, conn)
 
 q = "UPDATE edits set pageid={} WHERE edit_id={}"
