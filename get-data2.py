@@ -65,7 +65,6 @@ query = """
      ON t1.pageid = t2.pageid
     WHERE t1.pageid is not null
     group by t1.pageid, t1.page, t1.start
-    LIMIT 10
 """
 
 df2 = pd.read_sql(query, conn)
@@ -90,21 +89,23 @@ for r in range(df2.shape[0]):
     if first_dt is not None and first_dt > start.to_datetime().date():
         last_dt = start.to_datetime()
     current = last_dt
-    while current <= nnow:
-        url = 'http://stats.grok.se/json/en/' + current.strftime('%Y%m') + '/' + title
-        print 'Getting', url
-        r = requests.get(url)
-        data = json.loads(r.text)
-        data['pageid'] = row['pageid']
-        time.sleep(.1)
-        project = data['project']
-        pageid = data['pageid']
-        dvs = data['daily_views']
-        for dv in dvs.keys():
-            pv = dvs[dv]
-            q = query.format(pageid, project, dv, pv)
-            res = cur.execute(q)
-            conn.commit()
+    while current <= nnow + relativedelta(months=1):
+        td = nnow - current
+        if td.days > 1:
+            url = 'http://stats.grok.se/json/en/' + current.strftime('%Y%m') + '/' + title
+            print 'Getting', url
+            r = requests.get(url)
+            data = json.loads(r.text)
+            data['pageid'] = row['pageid']
+            time.sleep(.1)
+            project = data['project']
+            pageid = data['pageid']
+            dvs = data['daily_views']
+            for dv in dvs.keys():
+                pv = dvs[dv]
+                q = query.format(pageid, project, dv, pv)
+                res = cur.execute(q)
+                conn.commit()
         current = current + relativedelta(months=1)
 
 cur.close()
