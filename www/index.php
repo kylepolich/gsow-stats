@@ -17,7 +17,32 @@
        " and t3.project='en' " .
        "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid";
   $result = mysqli_query($conn, $q);
+  $rows = array();
+  $tot = 0;
+  $tot_30 = 0;
+  $tot_7 = 0;
+  while ($row = mysqli_fetch_array($result)) {
+    $tot = $tot + $row['views'];
+    $tot_30 = $tot_30 + $row['last_30'];
+    $tot_7 = $tot_7 + $row['last_7'];
+    array_push($rows, $row);
+  }
 ?>
+  <table>
+    <tr>
+      <td>Total:</td>
+      <td><? echo(number_format($tot)); ?></td>
+    </tr>
+    <tr>
+      <td>Total last 30 days:</td>
+      <td><? echo(number_format($tot_30)); ?></td>
+    </tr>
+    <tr>
+      <td>Total last 7 days:</td>
+      <td><? echo(number_format($tot_7)); ?></td>
+    </tr>
+  </table>
+  
   <table id="myTable" class="tablesorter">
     <thead>
       <tr>
@@ -33,7 +58,7 @@
     </thead>
     <tbody>
 <?php
-  while ($row = mysqli_fetch_array($result)) {
+  foreach ($rows as $row) {
     echo("<tr>");
     echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . "</td>");
     echo("<td>" . $row["start"] . "</td>");
