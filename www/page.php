@@ -5,6 +5,7 @@
            "FROM contributions " .
            "WHERE pageid=" . $_GET['pageid'] . " " .
            "GROUP BY title";
+  $query = "SELECT * from edits WHERE pageid=" . $_GET['pageid'];
   $result = mysqli_query($conn, $query);
   while ($r = mysqli_fetch_array($result)) {
     $row = $r;
@@ -15,14 +16,14 @@
     $e = array("name" => $r['name'], "c" => $r['c']);
     array_push($editors, $e);
   }
-  $result = mysqli_query($conn, "select sum(views) as total_views from page_views where pageid=" . $_GET['pageid'] . " and dt > (select min(ts) as ts from contributions where pageid=" . $_GET['pageid'] . ")");
+  $result = mysqli_query($conn, "select sum(views) as total_views from page_views where pageid=" . $_GET['pageid'] . " and dt > (select start from edits where pageid=" . $_GET['pageid'] . ")");
   while ($r = mysqli_fetch_array($result)) {
     $pvs = $r['total_views'];
   }
 ?>
 
-<h1><? echo($row['title']); ?></h1>
-<a href="https://en.wikipedia.org/wiki/<? echo($row['title']); ?>">wiki page</a>
+<h1><? echo($row['page']); ?></h1>
+<a href="https://en.wikipedia.org/wiki/<? echo($row['page']); ?>">wiki page</a>
 
 <table>
   <tr>
@@ -31,21 +32,7 @@
   </tr>
   <tr>
     <td>First GSoW edit:</td>
-    <td><? echo($row['mindt']); ?></td>
-  </tr>
-  <tr>
-    <td>Last GSoW edit:</td>
-    <td><? echo($row['maxdt']); ?></td>
-  </tr>
-  <tr>
-    <td>Touched by <? echo($row['editors']); ?> GSoW editors:</td>
-    <td>
-    <?
-      foreach ($editors as $editor) {
-        echo($editor['name'] . " (" . $editor['c'] . ")");
-      }
-    ?>
-    </td>
+    <td><? echo($row['start']); ?></td>
   </tr>
 </table>
 
