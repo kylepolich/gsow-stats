@@ -67,7 +67,8 @@
     echo("<td>" . number_format($row["views"]) . "</td>");
     echo("<td>" . number_format($row["last_30"]) . "</td>");
     echo("<td>" . number_format($row["last_7"]) . "</td>");
-    echo("<td><form action='index.php' method=post><input type='hidden' name='edit_id' value='" . $row['edit_id'] . "' /><input type='submit' value='delete' /></form></td>");
+    echo("<td><form action='index.php' method=post><input type='hidden' name='edit_id' value='" . $row['edit_id'] . "' /><input type='submit' value='delete' /></form>");
+    echo("<form action='edit.php'><input type='hidden' name='pageid' value='" . $row["pageid"] . "' /><input type='submit' value='edit' /></td>");
     echo("</tr>");
   }
 ?>
