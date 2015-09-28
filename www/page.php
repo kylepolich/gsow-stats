@@ -165,14 +165,14 @@ Add keyword:
 <table id="myTable" class="tablesorter">
   <thead>
     <tr>
-      <th>Tag</th>
+      <th>Keyword</th>
       <th>Delete</th>
     </tr>
   </thead>
   <tbody>
   <?
     foreach ($tags as $tag) {
-      echo("<tr><td>" . $tag['tag'] . "</td>");
+      echo("<tr><td><a href='index.php?tag=" . $tag['tag'] . "'>" . $tag['tag'] . "</a></td>");
       echo("<td><form action='page.php' method=POST style='display: inline'>");
       echo("<input type='hidden' name='tag_id' value='" . $tag['tag_id'] . "' />");
       echo("<input type='hidden' name='pageid' value='" . $pageid . "' />");

@@ -7,6 +7,17 @@
     $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'];
     $result = mysqli_query($conn, $q);
   }
+  $tag = "";
+  $tagq = "";
+  if (isset($_GET['tag'])) {
+    $tag = $_GET['tag'];
+  }
+  if (isset($_POST['tag'])) {
+    $tag = $_POST['tag'];
+  }
+  if ($tag != "") {
+    $tagq = "JOIN tags t4 on t1.pageid = t4.pageid and t4.tag='" . $tag . "' ";
+  }
   $q = "SELECT t1.edit_id, t1.page, t1.start, t1.pageid, sum(t3.views) as views, min(t3.dt) as min_dt, max(t3.dt) as max_dt " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 30 day) AND NOW() THEN t3.views ELSE 0 END) as last_30 " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 7 day) AND NOW() THEN t3.views ELSE 0 END) as last_7 " .
@@ -15,6 +26,7 @@
        " on t1.pageid=t3.pageid " .
        " and t1.start <= t3.dt " .
        " and t3.project='en' " .
+       $tagq .
        "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid";
   $result = mysqli_query($conn, $q);
   $rows = array();
@@ -42,7 +54,15 @@
       <td><? echo(number_format($tot_7)); ?></td>
     </tr>
   </table>
-  
+
+  <center>
+  <form action='index.php' method='get' style='display: inline'>
+    Keyword: <input name='tag' value='<? echo($tag); ?>' />
+    <input type='submit' value='Search' />
+  </form>
+  </center>
+  <br/>
+
   <table id="myTable" class="tablesorter">
     <thead>
       <tr>
@@ -67,8 +87,8 @@
     echo("<td>" . number_format($row["views"]) . "</td>");
     echo("<td>" . number_format($row["last_30"]) . "</td>");
     echo("<td>" . number_format($row["last_7"]) . "</td>");
-    echo("<td><form action='index.php' method=post><input type='hidden' name='edit_id' value='" . $row['edit_id'] . "' /><input type='submit' value='delete' /></form>");
-    echo("<form action='edit.php'><input type='hidden' name='pageid' value='" . $row["pageid"] . "' /><input type='submit' value='edit' /></td>");
+    echo("<td><form action='index.php' method=post style='display: inline'><input type='hidden' name='tag' value='" . $tag . "' /><input type='hidden' name='edit_id' value='" . $row['edit_id'] . "' /><input type='submit' value='delete' /></form>");
+    echo("<form action='edit.php' style='display: inline'><input type='hidden' name='tag' value='" . $tag . "' /><input type='hidden' name='pageid' value='" . $row["pageid"] . "' /><input type='submit' value='edit' /></td>");
     echo("</tr>");
   }
 ?>
