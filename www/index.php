@@ -43,15 +43,15 @@
   <table>
     <tr>
       <td>Total:</td>
-      <td><? echo(number_format($tot)); ?></td>
+      <td align='right'><? echo(number_format($tot)); ?></td>
     </tr>
     <tr>
       <td>Total last 30 days:</td>
-      <td><? echo(number_format($tot_30)); ?></td>
+      <td align='right'><? echo(number_format($tot_30)); ?></td>
     </tr>
     <tr>
       <td>Total last 7 days:</td>
-      <td><? echo(number_format($tot_7)); ?></td>
+      <td align='right'><? echo(number_format($tot_7)); ?></td>
     </tr>
   </table>
 
