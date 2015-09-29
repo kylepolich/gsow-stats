@@ -70,9 +70,9 @@
         <th>First edit</th>
         <th>Page Views from</th>
         <th>To</th>
-        <th>Total Views</th>
-        <th>Last 30 days</th>
-        <th>Last 7 days</th>
+        <th data-metric-name='cn'>Total Views</th>
+        <th data-metric-name='cn'>Last 30 days</th>
+        <th data-metric-name='cn'>Last 7 days</th>
         <th> </th>
       </tr>
     </thead>
@@ -96,8 +96,22 @@
   </table>
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#myTable").tablesorter();
+		$.tablesorter.addParser({
+			// set a unique id
+			id: 'cn',
+			is: function(s) {
+				return false;
+			},
+			format: function(s, table, cell, cellIndex) {
+				return (cell.innerHTML.replace(',', ''));
+			},
+			// set type, either numeric or text
+			type: 'numeric'
+		});
+
+	$("#myTable").tablesorter({headers : {4: {sorter: 'cn'}, 5: {sorter: 'cn'}, 6: {sorter: 'cn'} } });
 });
+
 </script>
 <?php
   include("footer.php");
