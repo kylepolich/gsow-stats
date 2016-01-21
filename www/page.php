@@ -53,7 +53,7 @@
 ?>
 
 <h1><? echo($title); ?></h1>
-<a href="https://en.wikipedia.org/wiki/<? echo($title); ?>">wiki page</a>
+<a target="_blank" href="https://en.wikipedia.org/wiki/<? echo($title); ?>">wiki page</a>
 
 <table>
   <tr>

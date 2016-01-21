@@ -2,16 +2,26 @@
 
 <?
   if (isset($_POST['page'])) {
-    $page = $_POST['page'];
-    $dt = $_POST['dt'];
-    $query = "INSERT INTO edits (page, start) VALUES ('$page', '$dt');";
-    $result = mysqli_query($conn, $query);
-    $rows = mysqli_affected_rows($conn);
-    if ($rows != 1) {
-      echo("<h2>Sorry, there was an error adding that page</h2>");
+    if (!isset($_POST['dt'])) {
+      echo("<h2>Sorry, you need to enter a start date</h2>");
     }
     else {
-      echo("<p>Page added successfully. Please allow a few minutes for the data to be downloaded.</p>");
+      if ($_POST['dt']=="YYYY-MM-DD") {
+        echo("<h2>Please enter a valid date</h2>");
+      }
+      else {
+        $page = $_POST['page'];
+        $dt = $_POST['dt'];
+        $query = "INSERT INTO edits (page, start) VALUES ('$page', '$dt');";
+        $result = mysqli_query($conn, $query);
+        $rows = mysqli_affected_rows($conn);
+        if ($rows != 1) {
+          echo("<h2>Sorry, there was an error adding that page</h2>");
+        }
+        else {
+          echo("<p>Page added successfully. Please allow a few minutes for the data to be downloaded.</p>");
+        }
+      }
     }
   }
 ?>

@@ -60,16 +60,34 @@
     Keyword: <input name='tag' value='<? echo($tag); ?>' />
     <input type='submit' value='Search' />
   </form>
+  <br/><br/>
+
+  <div style='width: 500px;'>
+  <?
+    $q = "select tag, count(distinct pageid) as c from tags group by tag order by count(distinct pageid) desc;";
+    $result = mysqli_query($conn, $q);
+    $i=0;
+    while ($row = mysqli_fetch_array($result)) {
+      $tag = $row['tag'];
+      $c = $row['c'];
+      if ($i > 0) {
+        echo(", ");
+      }
+      echo("<a href='index.php?tag=" . $tag . "'>" . $tag . " (" . $c . ")</a>");
+      $i = $i + 1;
+    }
+  ?>
+  </div>
   </center>
-  <br/>
+
+  <hr/>
 
   <table id="myTable" class="tablesorter">
     <thead>
       <tr>
         <th>Page</th>
         <th>First edit</th>
-        <th>Page Views from</th>
-        <th>To</th>
+        <th>Last updated</th>
         <th data-metric-name='cn'>Total Views</th>
         <th data-metric-name='cn'>Last 30 days</th>
         <th data-metric-name='cn'>Last 7 days</th>
@@ -80,15 +98,30 @@
 <?php
   foreach ($rows as $row) {
     echo("<tr>");
-    echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . "</td>");
-    echo("<td>" . $row["start"] . "</td>");
-    echo("<td>" . $row["min_dt"] . "</td>");
-    echo("<td>" . $row["max_dt"] . "</td>");
-    echo("<td>" . number_format($row["views"]) . "</td>");
-    echo("<td>" . number_format($row["last_30"]) . "</td>");
-    echo("<td>" . number_format($row["last_7"]) . "</td>");
-    echo("<td><form action='index.php' method=post style='display: inline'><input type='hidden' name='tag' value='" . $tag . "' /><input type='hidden' name='edit_id' value='" . $row['edit_id'] . "' /><input type='submit' value='delete' /></form>");
-    echo("<form action='edit.php' style='display: inline'><input type='hidden' name='tag' value='" . $tag . "' /><input type='hidden' name='pageid' value='" . $row["pageid"] . "' /><input type='submit' value='edit' /></td>");
+    if ($row["pageid"] != null) {
+      echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . "</a></td>");
+    } else {
+      echo("<td>" . $row["page"] . " (ERROR: not found)</td>");
+    }
+    ?>
+    <td><? echo($row["start"]); ?></td>
+    <td><? echo($row["max_dt"]); ?></td>
+    <td><? echo(number_format($row["views"])); ?></td>
+    <td><? echo(number_format($row["last_30"])); ?></td>
+    <td><? echo(number_format($row["last_7"])); ?></td>
+    <td>
+      <form action='index.php' method=post style='display: inline'>
+        <input type='hidden' name='tag' value='<? echo($tag); ?>' />
+        <input type='hidden' name='edit_id' value='<? echo($row['edit_id']); ?>' />
+        <input type='submit' value='delete' />
+      </form>
+      <form action='edit.php' style='display: inline'>
+        <input type='hidden' name='tag' value='<? echo($tag); ?>' />
+        <input type='hidden' name='pageid' value='<? echo($row["pageid"]); ?>' />
+        <input type='submit' value='edit' />
+      </form>
+    </td>
+    <?
     echo("</tr>");
   }
 ?>

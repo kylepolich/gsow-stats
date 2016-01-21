@@ -64,6 +64,8 @@ query = """
     LEFT JOIN page_views t2
      ON t1.pageid = t2.pageid
     WHERE t1.pageid is not null
+    AND t1.start <> '0000-00-00'
+and t1.page like 'P%'
     group by t1.pageid, t1.page, t1.start
 """
 
@@ -75,13 +77,16 @@ query = "INSERT INTO page_views (pageid, project, dt, views) VALUES({}, '{}', '{
 
 nnow = datetime.datetime.utcnow()
 
+print nnow
+nday = nnow.day
+
 cur = conn.cursor()
 for r in range(df2.shape[0]):
     row = df2.iloc[r]
     last_dt = row['last_dt']
     first_dt = row['first_dt']
     start = row['start']
-    title = row['title']
+    title = row['title'].decode('cp1252')
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
@@ -89,9 +94,12 @@ for r in range(df2.shape[0]):
     if first_dt is not None and first_dt > start.to_datetime().date():
         last_dt = start.to_datetime()
     current = last_dt
-    while current <= nnow + relativedelta(months=1):
-        td = nnow - current
-        if td.days > 1:
+    nnow = datetime.datetime.combine(nnow, datetime.time(0))
+    cday = current.day
+    nnow = nnow - relativedelta(days=nnow.day-1)
+    current = current - relativedelta(days=current.day-1)
+    while current < nnow or (current.year==nnow.year and current.month==nnow.month and cday < nday-1):
+        if 1==1:
             url = 'http://stats.grok.se/json/en/' + current.strftime('%Y%m') + '/' + title
             print 'Getting', url
             r = requests.get(url)
