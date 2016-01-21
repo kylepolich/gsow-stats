@@ -73,7 +73,7 @@
       if ($i > 0) {
         echo(", ");
       }
-      echo("<a href='index.php?tag=" . $tag . "'>" . $tag . " (" . $c . ")</a>");
+      echo("<a href='index.php?tag=" . $tag . "'><nobr>" . $tag . " (" . $c . ")</nobr></a>");
       $i = $i + 1;
     }
   ?>

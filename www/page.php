@@ -4,8 +4,10 @@
   include("header.php");
   if (isset($_POST['act'])) {
     if ($_POST['act'] == 'add') {
-      $q = "INSERT INTO tags (tag, pageid) VALUES ('" . $_POST['tag'] . "', " . $_POST['pageid'] . ");";
-      $result = mysqli_query($conn, $q);
+      if (trim($_POST['tag']) != "") {
+        $q = "INSERT INTO tags (tag, pageid) VALUES ('" . trim($_POST['tag']) . "', " . $_POST['pageid'] . ");";
+        $result = mysqli_query($conn, $q);
+      }
     }
     else {
       $q = "DELETE FROM tags where tag_id = " . $_POST['tag_id'];
