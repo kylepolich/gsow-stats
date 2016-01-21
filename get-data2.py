@@ -65,7 +65,6 @@ query = """
      ON t1.pageid = t2.pageid
     WHERE t1.pageid is not null
     AND t1.start <> '0000-00-00'
-and t1.page like 'P%'
     group by t1.pageid, t1.page, t1.start
 """
 
@@ -98,7 +97,9 @@ for r in range(df2.shape[0]):
     cday = current.day
     nnow = nnow - relativedelta(days=nnow.day-1)
     current = current - relativedelta(days=current.day-1)
-    while current < nnow or (current.year==nnow.year and current.month==nnow.month and cday < nday-1):
+    #print title, current, nnow, cday, nday
+    c = 0
+    while current < nnow or (current.year==nnow.year and current.month==nnow.month and (cday < nday-1 or c>0)):
         if 1==1:
             url = 'http://stats.grok.se/json/en/' + current.strftime('%Y%m') + '/' + title
             print 'Getting', url
@@ -115,6 +116,7 @@ for r in range(df2.shape[0]):
                 res = cur.execute(q)
                 conn.commit()
         current = current + relativedelta(months=1)
+        c += 1
 
 cur.close()
 
