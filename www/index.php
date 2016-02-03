@@ -27,7 +27,7 @@
        " and t1.start <= t3.dt " .
        " and t3.project='en' " .
        $tagq .
-       "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid";
+       "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid ORDER BY t1.page";
   $result = mysqli_query($conn, $q);
   $rows = array();
   $tot = 0;
@@ -142,7 +142,7 @@ $(document).ready(function() {
 			type: 'numeric'
 		});
 
-	$("#myTable").tablesorter({headers : {4: {sorter: 'cn'}, 5: {sorter: 'cn'}, 6: {sorter: 'cn'} } });
+	$("#myTable").tablesorter({headers : {4: {sorter: 'cn'}, 5: {sorter: 'cn'}, 3: {sorter: 'cn'} } });
 });
 
 </script>

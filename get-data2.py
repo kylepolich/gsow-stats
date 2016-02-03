@@ -6,6 +6,7 @@ import json
 import ConfigParser
 import time
 import datetime
+import urllib
 from dateutil.relativedelta import relativedelta
 
 propertiesFile = "my.properties"
@@ -33,7 +34,7 @@ for r in range(df.shape[0]):
   row = df.iloc[r]
   editid = row['edit_id']
   title = row['page']
-  url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&titles=' + title
+  url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote_plus(title)
   req = requests.get(url)
   j = json.loads(req.text)
   try:
