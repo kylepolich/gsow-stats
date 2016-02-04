@@ -1,19 +1,30 @@
 <?php
+/*
+Making it reliable is first.
+
+Other languages is second. 
+
+Figuring out how to make the keywords more attractive on the page
+
+Frozen Header
+*/
   ini_set('display_errors',1);
   ini_set('display_startup_errors',1);
   error_reporting(-1);
-  include("header.php");
   if (isset($_POST['edit_id'])) {
+    include('../../funcs.php');
     $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'];
     $result = mysqli_query($conn, $q);
+    header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
   }
+  include("header.php");
   $tag = "";
   $tagq = "";
   if (isset($_GET['tag'])) {
-    $tag = $_GET['tag'];
+    $tag = trim($_GET['tag']);
   }
   if (isset($_POST['tag'])) {
-    $tag = $_POST['tag'];
+    $tag = trim($_POST['tag']);
   }
   if ($tag != "") {
     $tagq = "JOIN tags t4 on t1.pageid = t4.pageid and t4.tag='" . $tag . "' ";
@@ -33,11 +44,15 @@
   $tot = 0;
   $tot_30 = 0;
   $tot_7 = 0;
+  $otag = $tag;
   while ($row = mysqli_fetch_array($result)) {
     $tot = $tot + $row['views'];
     $tot_30 = $tot_30 + $row['last_30'];
     $tot_7 = $tot_7 + $row['last_7'];
     array_push($rows, $row);
+  }
+  if ($_GET['msg'] != '') {
+    echo("<center>" . $_GET['msg'] . "</center>");
   }
 ?>
   <table>
@@ -111,12 +126,12 @@
     <td><? echo(number_format($row["last_7"])); ?></td>
     <td>
       <form action='index.php' method=post style='display: inline'>
-        <input type='hidden' name='tag' value='<? echo($tag); ?>' />
+        <input type='hidden' name='tag' value='<? echo($otag); ?>' />
         <input type='hidden' name='edit_id' value='<? echo($row['edit_id']); ?>' />
         <input type='submit' value='delete' />
       </form>
       <form action='edit.php' style='display: inline'>
-        <input type='hidden' name='tag' value='<? echo($tag); ?>' />
+        <input type='hidden' name='tag' value='<? echo($otag); ?>' />
         <input type='hidden' name='pageid' value='<? echo($row["pageid"]); ?>' />
         <input type='submit' value='edit' />
       </form>
