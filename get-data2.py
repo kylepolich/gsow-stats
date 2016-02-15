@@ -6,6 +6,7 @@ import json
 import ConfigParser
 import time
 import datetime
+import urllib
 from dateutil.relativedelta import relativedelta
 from mwviews.api import PageviewsClient
 
@@ -36,7 +37,7 @@ for r in range(df.shape[0]):
   row = df.iloc[r]
   editid = row['edit_id']
   title = row['page']
-  url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&titles=' + title
+  url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote_plus(title)
   req = requests.get(url)
   j = json.loads(req.text)
   try:
@@ -67,6 +68,7 @@ query = """
     LEFT JOIN page_views t2
      ON t1.pageid = t2.pageid
     WHERE t1.pageid is not null
+    AND t1.start <> '0000-00-00'
     group by t1.pageid, t1.page, t1.start
 """
 
@@ -78,14 +80,17 @@ query = "INSERT INTO page_views (pageid, project, dt, views) VALUES({}, '{}', '{
 
 nnow = datetime.datetime.utcnow()
 
+print nnow
+nday = nnow.day
+
 cur = conn.cursor()
 for r in range(df2.shape[0]):
     row = df2.iloc[r]
     last_dt = row['last_dt']
     first_dt = row['first_dt']
     start = row['start']
-    title = row['title'].strip()
     project = 'en'
+    title = row['title'].decode('cp1252').strip()
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
@@ -111,6 +116,16 @@ for r in range(df2.shape[0]):
           current = current + relativedelta(months=1)
     except:
       print 'Unable to get', articles, project, 'from', st, 'to', end
+
+"""
+    nnow = datetime.datetime.combine(nnow, datetime.time(0))
+    cday = current.day
+    nnow = nnow - relativedelta(days=nnow.day-1)
+    current = current - relativedelta(days=current.day-1)
+    #print title, current, nnow, cday, nday
+    c = 0
+    while current < nnow or (current.year==nnow.year and current.month==nnow.month and (cday < nday-1 or c>0)):
+"""
 
 cur.close()
 
