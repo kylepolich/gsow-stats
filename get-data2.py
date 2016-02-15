@@ -7,6 +7,7 @@ import ConfigParser
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
+from mwviews.api import PageviewsClient
 
 propertiesFile = "my.properties"
 cp = ConfigParser.ConfigParser()
@@ -26,6 +27,8 @@ cache = {}
 
 query = "select * from edits where pageid is null"
 df = pd.read_sql(query, conn)
+
+p = PageviewsClient()
 
 q = "UPDATE edits set pageid={} WHERE edit_id={}"
 cur = conn.cursor()
@@ -81,7 +84,8 @@ for r in range(df2.shape[0]):
     last_dt = row['last_dt']
     first_dt = row['first_dt']
     start = row['start']
-    title = row['title']
+    title = row['title'].strip()
+    project = 'en'
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
@@ -89,22 +93,24 @@ for r in range(df2.shape[0]):
     if first_dt is not None and first_dt > start.to_datetime().date():
         last_dt = start.to_datetime()
     current = last_dt
-    while current <= nnow:
-        url = 'http://stats.grok.se/json/en/' + current.strftime('%Y%m') + '/' + title
-        print 'Getting', url
-        r = requests.get(url)
-        data = json.loads(r.text)
-        data['pageid'] = row['pageid']
-        time.sleep(.1)
-        project = data['project']
-        pageid = data['pageid']
-        dvs = data['daily_views']
-        for dv in dvs.keys():
-            pv = dvs[dv]
-            q = query.format(pageid, project, dv, pv)
-            res = cur.execute(q)
-            conn.commit()
-        current = current + relativedelta(months=1)
+    try:
+      while current <= nnow:
+          st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
+          end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
+          articles = [title]
+          print 'Getting', articles, project, 'from', st, 'to', end
+          resp = p.article_views(project + '.wikipedia', articles, start=st, end=end)
+          time.sleep(.1)
+          pageid = row.pageid
+          for dv in resp.keys():
+              pv = resp[dv][title.replace(' ', '_')]
+              if pv is not None:
+                q = query.format(pageid, project, dv, pv)
+                res = cur.execute(q)
+                conn.commit()
+          current = current + relativedelta(months=1)
+    except:
+      print 'Unable to get', articles, project, 'from', st, 'to', end
 
 cur.close()
 
