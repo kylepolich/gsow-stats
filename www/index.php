@@ -51,7 +51,7 @@ Frozen Header
     $tot_7 = $tot_7 + $row['last_7'];
     array_push($rows, $row);
   }
-  if ($_GET['msg'] != '') {
+  if (isset($_GET['msg']) && $_GET['msg'] != '') {
     echo("<center>" . $_GET['msg'] . "</center>");
   }
 ?>

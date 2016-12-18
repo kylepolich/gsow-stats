@@ -99,21 +99,19 @@ for r in range(df2.shape[0]):
         last_dt = start.to_datetime()
     current = last_dt
     try:
-      while current <= nnow:
-          st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
-          end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
-          articles = [title]
-          print 'Getting', articles, project, 'from', st, 'to', end
-          resp = p.article_views(project + '.wikipedia', articles, start=st, end=end)
-          time.sleep(.1)
-          pageid = row.pageid
-          for dv in resp.keys():
-              pv = resp[dv][title.replace(' ', '_')]
-              if pv is not None:
-                q = query.format(pageid, project, dv, pv)
-                res = cur.execute(q)
-                conn.commit()
-          current = current + relativedelta(months=1)
+        st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
+        end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
+        articles = [title]
+        print 'Getting', articles, project, 'from', st, 'to', end
+        resp = p.article_views(project + '.wikipedia', articles, start=st, end=end)
+        time.sleep(.1)
+        pageid = row.pageid
+        for dv in resp.keys():
+            pv = resp[dv][title.replace(' ', '_')]
+            if pv is not None:
+              q = query.format(pageid, project, dv, pv)
+              res = cur.execute(q)
+              conn.commit()
     except:
       print 'Unable to get', articles, project, 'from', st, 'to', end
 

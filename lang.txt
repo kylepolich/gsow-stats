@@ -1,0 +1,16 @@
+ar	Arabic
+en	English
+it	Italian
+sv	Swedish
+es	Spanish
+pt	Portuguese
+de	German
+nl	Netherlands (Dutch)
+fr	French
+pl	Polish
+nb	Norwegian (Bokmål)
+nn	Norwegian (Nynorsk)
+ru	Russian
+hu	Hungarian
+da	Danish
+

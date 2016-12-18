@@ -33,8 +33,16 @@
     <td><input name='page' /></td>
   </tr>
   <tr>
-    <td>First major edit date:</td>
+    <td>First major edit date (english):</td>
     <td><input name='dt' value='YYYY-MM-DD' /></td>
+  </tr>
+  <tr>
+    <td>[not working yet]First major edit date (German):</td>
+    <td><input name='dt_de' value='YYYY-MM-DD' /></td>
+  </tr>
+  <tr>
+    <td>[not working yet]First major edit date (French):</td>
+    <td><input name='dt_fr' value='YYYY-MM-DD' /></td>
   </tr>
   <tr>
     <td colspan=2 align=right><input type='submit' value='Add' /></td>
