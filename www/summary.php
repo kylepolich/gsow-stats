@@ -2,7 +2,7 @@
 
 Below are some top viewed pages.
 
-<?
+<?php
   $query = "SELECT t1.title, sum(t2.views) as total" .
            ", sum(CASE WHEN t2.dt > NOW() - INTERVAL 3 DAY THEN t2.views ELSE 0 END) as last3 " .
            "FROM contributions t1 " .

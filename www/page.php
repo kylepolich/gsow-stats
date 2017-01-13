@@ -1,7 +1,9 @@
-<?
+<?php
   ini_set('display_errors',1);
   ini_set('display_startup_errors',1);
   include("header.php");
+  include("../config.php");
+  $conn = mysqli_connect($host, $user, $password, "gsow");
   if (isset($_POST['act'])) {
     if ($_POST['act'] == 'add') {
       if (trim($_POST['tag']) != "") {
@@ -54,17 +56,17 @@
   }
 ?>
 
-<h1><? echo($title); ?></h1>
-<a target="_blank" href="https://en.wikipedia.org/wiki/<? echo($title); ?>">wiki page</a>
+<h1><?php echo($title); ?></h1>
+<a target="_blank" href="https://en.wikipedia.org/wiki/<?php echo($title); ?>">wiki page</a>
 
 <table>
   <tr>
     <td>Total views since first GSoW edit:</td>
-    <td><b><? echo($pvs); ?></b></td>
+    <td><b><?php echo($pvs); ?></b></td>
   </tr>
   <tr>
     <td>First GSoW edit:</td>
-    <td><? echo($row['start']); ?></td>
+    <td><?php echo($row['start']); ?></td>
   </tr>
 </table>
 
@@ -119,7 +121,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.tsv("page-data.php?pageid=<? echo($pageid); ?>", function(error, data) {
+d3.tsv("page-data.php?pageid=<?php echo($pageid); ?>", function(error, data) {
   if (error) throw error;
 
   data.forEach(function(d) {
@@ -157,7 +159,7 @@ d3.tsv("page-data.php?pageid=<? echo($pageid); ?>", function(error, data) {
 
 Add keyword:
 <form action='page.php' method='POST'>
-  <input type='hidden' name='pageid' value='<? echo($pageid); ?>' />
+  <input type='hidden' name='pageid' value='<?php echo($pageid); ?>' />
   <input type='hidden' name='act' value='add' />
   <input name='tag' />
   <input type='submit' value='Add' />
@@ -172,7 +174,7 @@ Add keyword:
     </tr>
   </thead>
   <tbody>
-  <?
+  <?php
     foreach ($tags as $tag) {
       echo("<tr><td><a href='index.php?tag=" . $tag['tag'] . "'>" . $tag['tag'] . "</a></td>");
       echo("<td><form action='page.php' method=POST style='display: inline'>");

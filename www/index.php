@@ -12,12 +12,12 @@ Frozen Header
   ini_set('display_startup_errors',1);
   error_reporting(-1);
   if (isset($_POST['edit_id'])) {
-    include('../../funcs.php');
     $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'];
     $result = mysqli_query($conn, $q);
     header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
   }
   include("header.php");
+  $conn = mysqli_connect($host, $user, $password, "gsow");
   $tag = "";
   $tagq = "";
   if (isset($_GET['tag'])) {
@@ -58,27 +58,27 @@ Frozen Header
   <table>
     <tr>
       <td>Total:</td>
-      <td align='right'><? echo(number_format($tot)); ?></td>
+      <td align='right'><?php echo(number_format($tot)); ?></td>
     </tr>
     <tr>
       <td>Total last 30 days:</td>
-      <td align='right'><? echo(number_format($tot_30)); ?></td>
+      <td align='right'><?php echo(number_format($tot_30)); ?></td>
     </tr>
     <tr>
       <td>Total last 7 days:</td>
-      <td align='right'><? echo(number_format($tot_7)); ?></td>
+      <td align='right'><?php echo(number_format($tot_7)); ?></td>
     </tr>
   </table>
 
   <center>
   <form action='index.php' method='get' style='display: inline'>
-    Keyword: <input name='tag' value='<? echo($tag); ?>' />
+    Keyword: <input name='tag' value='<?php echo($tag); ?>' />
     <input type='submit' value='Search' />
   </form>
   <br/><br/>
 
   <div style='width: 500px;'>
-  <?
+  <?php
     $q = "select tag, count(distinct pageid) as c from tags group by tag order by count(distinct pageid) desc;";
     $result = mysqli_query($conn, $q);
     $i=0;
@@ -119,24 +119,24 @@ Frozen Header
       echo("<td>" . $row["page"] . " (ERROR: not found)</td>");
     }
     ?>
-    <td><? echo($row["start"]); ?></td>
-    <td><? echo($row["max_dt"]); ?></td>
-    <td><? echo(number_format($row["views"])); ?></td>
-    <td><? echo(number_format($row["last_30"])); ?></td>
-    <td><? echo(number_format($row["last_7"])); ?></td>
+    <td><?php echo($row["start"]); ?></td>
+    <td><?php echo($row["max_dt"]); ?></td>
+    <td><?php echo(number_format($row["views"])); ?></td>
+    <td><?php echo(number_format($row["last_30"])); ?></td>
+    <td><?php echo(number_format($row["last_7"])); ?></td>
     <td>
       <form action='index.php' method=post style='display: inline'>
-        <input type='hidden' name='tag' value='<? echo($otag); ?>' />
-        <input type='hidden' name='edit_id' value='<? echo($row['edit_id']); ?>' />
+        <input type='hidden' name='tag' value='<?php echo($otag); ?>' />
+        <input type='hidden' name='edit_id' value='<?php echo($row['edit_id']); ?>' />
         <input type='submit' value='delete' />
       </form>
       <form action='edit.php' style='display: inline'>
-        <input type='hidden' name='tag' value='<? echo($otag); ?>' />
-        <input type='hidden' name='pageid' value='<? echo($row["pageid"]); ?>' />
+        <input type='hidden' name='tag' value='<?php echo($otag); ?>' />
+        <input type='hidden' name='pageid' value='<?php echo($row["pageid"]); ?>' />
         <input type='submit' value='edit' />
       </form>
     </td>
-    <?
+    <?php
     echo("</tr>");
   }
 ?>

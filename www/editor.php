@@ -1,6 +1,6 @@
 <?php include("header.php"); ?>
 
-<?
+<?php
 $result = mysqli_query($conn, "SELECT t2.* from editor t1 join contributions t2 on t1.editor_id = t2.editor_id where t1.name='" . $_GET['name'] . "'");
 
 echo("<table border=1>");

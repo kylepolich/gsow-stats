@@ -1,6 +1,6 @@
 <?php include("header.php"); ?>
 
-<?
+<?php
   if (isset($_POST['page'])) {
     if (!isset($_POST['dt'])) {
       echo("<h2>Sorry, you need to enter a start date</h2>");

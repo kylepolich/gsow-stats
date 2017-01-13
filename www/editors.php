@@ -1,6 +1,6 @@
 <?php include("header.php"); ?>
 
-<?
+<?php
 $result = mysqli_query($conn, "SELECT t1.editor_id, t1.name from editor t1");
 
 while ($row = mysqli_fetch_array($result)) {
