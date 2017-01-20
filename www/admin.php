@@ -20,6 +20,7 @@
       }
       else {
         $dt = $_POST['dt'];
+        $page = str_replace("'", "\'", $page);
         $query = "UPDATE edits SET start='$dt' WHERE page='$page'";
         $result = mysqli_query($conn, $query);
         $rows = mysqli_affected_rows($conn);
@@ -47,6 +48,14 @@
   <tr>
     <td>Page name:</td>
     <td><input name='page' value="<?php echo($page); ?>" /></td>
+  </tr>
+  <tr>
+    <td>Language:</td>
+    <td>
+      <select name="lang">
+        <option value="en">en</option>
+      </select>
+    </td>
   </tr>
   <tr>
     <td>First major edit date (english):</td>

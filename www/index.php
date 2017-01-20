@@ -34,11 +34,14 @@ Frozen Header
   $q = "SELECT t1.edit_id, t1.page, t1.start, t1.pageid, sum(t3.views) as views, min(t3.dt) as min_dt, max(t3.dt) as max_dt " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 30 day) AND NOW() THEN t3.views ELSE 0 END) as last_30 " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 7 day) AND NOW() THEN t3.views ELSE 0 END) as last_7 " .
+       " , coalesce(t4.c, 0) as tags " .
        "FROM edits t1 " .
        "LEFT JOIN page_views t3 " .
        " on t1.pageid=t3.pageid " .
        " and t1.start <= t3.dt " .
        " and t3.project='en' " .
+       "left join (select pageid, count(*) as c from tags group by pageid ) t4 " .
+       " on t1.pageid = t4.pageid " .
        $tagq .
        "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid ORDER BY t1.page";
   $result = mysqli_query($conn, $q);
@@ -106,6 +109,7 @@ Frozen Header
     <thead>
       <tr>
         <th>Page</th>
+        <th>Lang</th>
         <th>First edit</th>
         <th>Last updated</th>
         <th data-metric-name='cn'>Total Views</th>
@@ -119,10 +123,11 @@ Frozen Header
   foreach ($rows as $row) {
     echo("<tr>");
     if ($row["pageid"] != null) {
-      echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . "</a></td>");
+      echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . " (" . $row["tags"] . ")" . "</a></td>");
     } else {
-      echo("<td>" . $row["page"] . " (ERROR: not found)</td>");
+      echo("<td>" . $row["page"] . "(" . $row["tags"] . ")" . " (ERROR: not found)</td>");
     }
+    echo("<td>en</td>");
     ?>
     <td><?php echo($row["start"]); ?></td>
     <td><?php echo($row["max_dt"]); ?></td>
