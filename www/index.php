@@ -1,7 +1,5 @@
 <?php
 /*
-Making it reliable is first.
-
 Other languages is second. 
 
 Figuring out how to make the keywords more attractive on the page
@@ -11,13 +9,17 @@ Frozen Header
   ini_set('display_errors',1);
   ini_set('display_startup_errors',1);
   error_reporting(-1);
+  include("../config.php");
+  $conn = mysqli_connect($host, $user, $password, "gsow");
+  $msg = "";
   if (isset($_POST['edit_id'])) {
     $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'];
     $result = mysqli_query($conn, $q);
-    header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
+    //header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
+    //return;
+    $msg="<h2>Delete successed</h2>";
   }
   include("header.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow");
   $tag = "";
   $tagq = "";
   if (isset($_GET['tag'])) {
@@ -52,7 +54,10 @@ Frozen Header
     array_push($rows, $row);
   }
   if (isset($_GET['msg']) && $_GET['msg'] != '') {
-    echo("<center>" . $_GET['msg'] . "</center>");
+    $msg = $_GET['msg'];
+  }
+  if ($msg != "") {
+    echo("<center>" . $msg . "</center>");
   }
 ?>
   <table>
@@ -130,9 +135,11 @@ Frozen Header
         <input type='hidden' name='edit_id' value='<?php echo($row['edit_id']); ?>' />
         <input type='submit' value='delete' />
       </form>
-      <form action='edit.php' style='display: inline'>
+      <form action='admin.php' style='display: inline'>
         <input type='hidden' name='tag' value='<?php echo($otag); ?>' />
         <input type='hidden' name='pageid' value='<?php echo($row["pageid"]); ?>' />
+        <input type='hidden' name='page' value='<?php echo($row["page"]); ?>' />
+        <input type='hidden' name='dt' value='<?php echo($row["start"]); ?>' />
         <input type='submit' value='edit' />
       </form>
     </td>
