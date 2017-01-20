@@ -69,8 +69,14 @@ query = """
      ON t1.pageid = t2.pageid
     WHERE t1.pageid is not null
     AND t1.start <> '0000-00-00'
+    or t1.pageid in (
+	    select t1.pageid
+			from edits t1
+			left join page_views t2 on t1.pageid = t2.pageid
+			where t2.pageid is null
+		)
     group by t1.pageid, t1.page, t1.start
-    having max(t2.dt) < DATE_FORMAT(DATE_ADD(now(), INTERVAL -2 DAY), '%Y-%m-%d')
+    having max(coalesce(t2.dt, '2000-01-01')) < DATE_FORMAT(DATE_ADD(now(), INTERVAL -2 DAY), '%Y-%m-%d')
 """
 
 df2 = pd.read_sql(query, conn)
@@ -91,7 +97,7 @@ for r in range(df2.shape[0]):
     first_dt = row['first_dt']
     start = row['start']
     project = 'en'
-    title = row['title'].decode('cp1252').strip()
+    title = row['title'].strip()
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
