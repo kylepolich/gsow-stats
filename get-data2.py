@@ -70,6 +70,7 @@ query = """
     WHERE t1.pageid is not null
     AND t1.start <> '0000-00-00'
     group by t1.pageid, t1.page, t1.start
+    having max(t2.dt) < DATE_FORMAT(DATE_ADD(now(), INTERVAL -2 DAY), '%Y-%m-%d')
 """
 
 df2 = pd.read_sql(query, conn)
