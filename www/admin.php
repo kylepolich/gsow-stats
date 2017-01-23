@@ -4,13 +4,16 @@
   $page = "";
   $dt = "YYYY-MM-DD";
   $act = "Add";
+  $lang = "";
   if (isset($_GET['page'])) {
     $page = $_GET['page'];
     $dt = substr($_GET['dt'], 0, 10);
+    $lang = $_GET['lang'];
     $act = "Update";
   }
   if (isset($_POST['page'])) {
     $page = $_POST['page'];
+    $lang = $_POST['lang'];
     if (!isset($_POST['dt'])) {
       echo("<h2>Sorry, you need to enter a start date</h2>");
     }
@@ -20,6 +23,7 @@
       }
       else {
         $dt = $_POST['dt'];
+        $page = str_replace("'", "\'", $page);
         $query = "UPDATE edits SET start='$dt' WHERE page='$page'";
         $result = mysqli_query($conn, $query);
         $rows = mysqli_affected_rows($conn);
@@ -27,7 +31,7 @@
           echo("<h2>Page updated</h2>");
         }
         else {
-          $query = "INSERT INTO edits (page, start) VALUES ('$page', '$dt');";
+          $query = "INSERT INTO edits (page, lang, start) VALUES ('$page', '$lang', '$dt');";
           $result = mysqli_query($conn, $query);
           $rows = mysqli_affected_rows($conn);
           if ($rows != 1) {
@@ -39,6 +43,7 @@
         }
       }
     }
+    $lang = "";
   }
 ?>
 <form action='admin.php' method=POST>
@@ -47,6 +52,27 @@
   <tr>
     <td>Page name:</td>
     <td><input name='page' value="<?php echo($page); ?>" /></td>
+  </tr>
+  <tr>
+    <td>Language:</td>
+    <td>
+      <?php
+        if ($lang != "") {
+          echo($lang);
+          echo("<input type='hidden' name='lang' value='$lang' />");
+        } else {
+      ?>
+      <select name="lang">
+        <option value="en">en - English</option>
+        <option value="fr">fr - French</option>
+        <option value="es">es - Spanish</option>
+        <option value="de">de - German</option>
+        <option value="it">it - Italian</option>
+        <option value="pt">pt - Portugues</option>
+        <option value="pl">pl - Polish</option>
+      </select>
+      <?php } ?>
+    </td>
   </tr>
   <tr>
     <td>First major edit date (english):</td>
