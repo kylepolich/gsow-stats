@@ -39,7 +39,7 @@ Frozen Header
        "LEFT JOIN page_views t3 " .
        " on t1.pageid=t3.pageid " .
        " and t1.start <= t3.dt " .
-       " and t3.project='en' " .
+       " and t3.project=t1.lang .
        "left join (select pageid, count(*) as c from tags group by pageid ) t4 " .
        " on t1.pageid = t4.pageid " .
        $tagq .
