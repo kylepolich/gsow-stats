@@ -21,10 +21,9 @@ db_db       = cp.get('Params', 'db_db')
 
 conn = mdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_db)
 
-url1 = 'http://en.wikipedia.org/w/api.php?action=query&list=usercontribs&ucuser='
-url2 = '&uclimit=5000&ucdir=newer&format=json'
-
 cache = {}
+
+# Handle brand new pages added which haven't had anything downloaded yet.  Determine pageid
 
 query = "select * from edits where pageid is null"
 df = pd.read_sql(query, conn)
@@ -37,7 +36,8 @@ for r in range(df.shape[0]):
   row = df.iloc[r]
   editid = row['edit_id']
   title = row['page']
-  url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote_plus(title)
+  lang = row['lang']
+  url = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote_plus(title)
   req = requests.get(url)
   j = json.loads(req.text)
   try:
@@ -61,7 +61,7 @@ cur.close()
 # UPDATE PAGE VIEWS
 
 query = """
-    SELECT t1.pageid, t1.page as title, t1.start
+    SELECT t1.pageid, t1.lang, t1.page as title, t1.start
      , min(t2.dt) as first_dt
      , max(t2.dt) as last_dt
     FROM edits t1
@@ -75,7 +75,7 @@ query = """
 			left join page_views t2 on t1.pageid = t2.pageid
 			where t2.pageid is null
 		)
-    group by t1.pageid, t1.page, t1.start
+    group by t1.pageid, t1.lang, t1.page, t1.start
     having max(coalesce(t2.dt, '2000-01-01')) < DATE_FORMAT(DATE_ADD(now(), INTERVAL -2 DAY), '%Y-%m-%d')
 """
 
@@ -96,7 +96,7 @@ for r in range(df2.shape[0]):
     last_dt = row['last_dt']
     first_dt = row['first_dt']
     start = row['start']
-    project = 'en'
+    project = row['lang']
     title = row['title'].strip()
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
