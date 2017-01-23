@@ -64,6 +64,12 @@
       ?>
       <select name="lang">
         <option value="en">en - English</option>
+        <option value="fr">fr - French</option>
+        <option value="es">es - Spanish</option>
+        <option value="de">de - German</option>
+        <option value="it">it - Italian</option>
+        <option value="pt">pt - Portugues</option>
+        <option value="pl">pl - Polish</option>
         <option value="nl">nl - Dutch</option>
         <option value="hu">hu - Hungarian</option>
         <option value="ru">ru - Russian</option>
