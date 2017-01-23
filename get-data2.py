@@ -61,7 +61,7 @@ cur.close()
 # UPDATE PAGE VIEWS
 
 query = """
-    SELECT t1.pageid, t1.page as title, t1.start
+    SELECT t1.pageid, t1.page as title, t1.start, t1.lang
      , min(t2.dt) as first_dt
      , max(t2.dt) as last_dt
     FROM edits t1
@@ -75,7 +75,7 @@ query = """
 			left join page_views t2 on t1.pageid = t2.pageid
 			where t2.pageid is null
 		)
-    group by t1.pageid, t1.page, t1.start
+    group by t1.pageid, t1.page, t1.start, t1.lang
     having max(coalesce(t2.dt, '2000-01-01')) < DATE_FORMAT(DATE_ADD(now(), INTERVAL -2 DAY), '%Y-%m-%d')
 """
 
@@ -96,7 +96,7 @@ for r in range(df2.shape[0]):
     last_dt = row['last_dt']
     first_dt = row['first_dt']
     start = row['start']
-    project = 'en'
+    project = row['lang']
     title = row['title'].strip()
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)

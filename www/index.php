@@ -13,7 +13,7 @@ Frozen Header
   $conn = mysqli_connect($host, $user, $password, "gsow");
   $msg = "";
   if (isset($_POST['edit_id'])) {
-    $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'];
+    $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'] . " and lang='" . $_POST['lang'] . "'";
     $result = mysqli_query($conn, $q);
     //header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
     //return;
@@ -31,7 +31,7 @@ Frozen Header
   if ($tag != "") {
     $tagq = "JOIN tags t4 on t1.pageid = t4.pageid and t4.tag='" . $tag . "' ";
   }
-  $q = "SELECT t1.edit_id, t1.page, t1.start, t1.pageid, sum(t3.views) as views, min(t3.dt) as min_dt, max(t3.dt) as max_dt " .
+  $q = "SELECT t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid, sum(t3.views) as views, min(t3.dt) as min_dt, max(t3.dt) as max_dt " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 30 day) AND NOW() THEN t3.views ELSE 0 END) as last_30 " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 7 day) AND NOW() THEN t3.views ELSE 0 END) as last_7 " .
        " , coalesce(t4.c, 0) as tags " .
@@ -43,7 +43,7 @@ Frozen Header
        "left join (select pageid, count(*) as c from tags group by pageid ) t4 " .
        " on t1.pageid = t4.pageid " .
        $tagq .
-       "GROUP BY t1.edit_id, t1.page, t1.start, t1.pageid ORDER BY t1.page";
+       "GROUP BY t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid ORDER BY t1.page";
   $result = mysqli_query($conn, $q);
   $rows = array();
   $tot = 0;
@@ -127,7 +127,7 @@ Frozen Header
     } else {
       echo("<td>" . $row["page"] . "(" . $row["tags"] . ")" . " (ERROR: not found)</td>");
     }
-    echo("<td>en</td>");
+    echo("<td>" . $row['lang'] . "</td>");
     ?>
     <td><?php echo($row["start"]); ?></td>
     <td><?php echo($row["max_dt"]); ?></td>
@@ -137,11 +137,13 @@ Frozen Header
     <td>
       <form action='index.php' method=post style='display: inline'>
         <input type='hidden' name='tag' value='<?php echo($otag); ?>' />
+        <input type='hidden' name='lang' value='<?php echo($row['lang']); ?>' />
         <input type='hidden' name='edit_id' value='<?php echo($row['edit_id']); ?>' />
         <input type='submit' value='delete' />
       </form>
       <form action='admin.php' style='display: inline'>
         <input type='hidden' name='tag' value='<?php echo($otag); ?>' />
+        <input type='hidden' name='lang' value='<?php echo($row['lang']); ?>' />
         <input type='hidden' name='pageid' value='<?php echo($row["pageid"]); ?>' />
         <input type='hidden' name='page' value='<?php echo($row["page"]); ?>' />
         <input type='hidden' name='dt' value='<?php echo($row["start"]); ?>' />

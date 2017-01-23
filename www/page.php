@@ -20,13 +20,14 @@
   else {
     $pageid = $_GET['pageid'];
   }
-  $query = "SELECT edit_id, page, start, pageid " .
+  $query = "SELECT edit_id, lang, page, start, pageid " .
            "FROM edits " .
            "WHERE pageid=" . $pageid;
   $result = mysqli_query($conn, $query);
   while ($r = mysqli_fetch_array($result)) {
     $row = $r;
     $title = $row['page'];
+    $lang = $row['lang'];
   }
   $query = "SELECT tag_id, tag from tags WHERE pageid=" . $pageid;
   $result = mysqli_query($conn, $query);
@@ -57,7 +58,7 @@
 ?>
 
 <h1><?php echo($title); ?></h1>
-<a target="_blank" href="https://en.wikipedia.org/wiki/<?php echo($title); ?>">wiki page</a>
+<a target="_blank" href="https://<?php echo($lang); ?>.wikipedia.org/wiki/<?php echo($title); ?>">wiki page</a>
 
 <table>
   <tr>
