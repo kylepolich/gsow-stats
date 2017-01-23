@@ -29,7 +29,7 @@ Frozen Header
     $tag = trim($_POST['tag']);
   }
   if ($tag != "") {
-    $tagq = "JOIN tags t4 on t1.pageid = t4.pageid and t4.tag='" . $tag . "' ";
+    $tagq = "JOIN tags t99 on t1.pageid = t99.pageid and t99.tag='" . $tag . "' ";
   }
   $q = "SELECT t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid, sum(t3.views) as views, min(t3.dt) as min_dt, max(t3.dt) as max_dt " .
        " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 30 day) AND NOW() THEN t3.views ELSE 0 END) as last_30 " .
