@@ -85,7 +85,7 @@
     </td>
   </tr>
   <tr>
-    <td>First major edit date (english):</td>
+    <td>First major edit date:</td>
     <td><input name='dt' value="<?php echo($dt); ?>" /></td>
   </tr>
   <tr>
