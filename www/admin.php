@@ -64,12 +64,16 @@
       ?>
       <select name="lang">
         <option value="en">en - English</option>
-        <option value="fr">fr - French</option>
-        <option value="es">es - Spanish</option>
-        <option value="de">de - German</option>
-        <option value="it">it - Italian</option>
-        <option value="pt">pt - Portugues</option>
-        <option value="pl">pl - Polish</option>
+        <option value="nl">nl - Dutch</option>
+        <option value="hu">hu - Hungarian</option>
+        <option value="ru">ru - Russian</option>
+        <option value="fi">fi - Finnish</option>
+        <option value="bg">bg - Bulgarian</option>
+        <option value="sv">sv - Swedish</option>
+        <option value="ar">ar - Arabic</option>
+        <option value="cs">cs - Czech</option>
+        <option value="ro">ro - Romanian</option>
+        <option value="zh">zh - Chinese</option>
       </select>
       <?php } ?>
     </td>
