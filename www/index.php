@@ -108,13 +108,13 @@ Frozen Header
   <table id="myTable" class="tablesorter">
     <thead>
       <tr>
-        <th>Page</th>
         <th>Lang</th>
-        <th>First edit</th>
-        <th>Last updated</th>
+        <th>Page</th>
         <th data-metric-name='cn'>Total Views</th>
         <th data-metric-name='cn'>Last 30 days</th>
         <th data-metric-name='cn'>Last 7 days</th>
+        <th>First edit</th>
+        <th>Last updated</th>
         <th> </th>
       </tr>
     </thead>
@@ -122,18 +122,18 @@ Frozen Header
 <?php
   foreach ($rows as $row) {
     echo("<tr>");
+    echo("<td>" . $row['lang'] . "</td>");
     if ($row["pageid"] != null) {
       echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . " (" . $row["tags"] . ")" . "</a></td>");
     } else {
       echo("<td>" . $row["page"] . "(" . $row["tags"] . ")" . " (ERROR: not found)</td>");
     }
-    echo("<td>" . $row['lang'] . "</td>");
     ?>
-    <td><?php echo($row["start"]); ?></td>
-    <td><?php echo($row["max_dt"]); ?></td>
     <td><?php echo(number_format($row["views"])); ?></td>
     <td><?php echo(number_format($row["last_30"])); ?></td>
     <td><?php echo(number_format($row["last_7"])); ?></td>
+    <td><?php echo($row["start"]); ?></td>
+    <td><?php echo($row["max_dt"]); ?></td>
     <td>
       <form action='index.php' method=post style='display: inline'>
         <input type='hidden' name='tag' value='<?php echo($otag); ?>' />
