@@ -19,7 +19,7 @@ db_user     = cp.get('Params', 'db_user')
 db_password = cp.get('Params', 'db_password')
 db_db       = cp.get('Params', 'db_db')
 
-conn = mdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_db)
+conn = mdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_db, charset = 'utf8')
 
 cache = {}
 
@@ -37,11 +37,15 @@ for r in range(df.shape[0]):
   editid = row['edit_id']
   title = row['page']
   lang = row['lang']
-  url = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote_plus(title)
+  url = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote(title.encode("utf8"))
+  print 'Getting', url
   req = requests.get(url)
   j = json.loads(req.text)
   try:
     pages = j['query']['pages']
+  except:
+    print 'Error on ', r, title, url
+  else:
     keys = pages.keys()
     if len(keys)==1:
       key = keys[0]
@@ -49,9 +53,6 @@ for r in range(df.shape[0]):
       q2 = q.format(pageid, editid)
       cur.execute(q2)
       conn.commit()
-  except:
-    print 'Error on ', r, title, url
-    continue
 
 cur.close()
 
@@ -105,22 +106,23 @@ for r in range(df2.shape[0]):
     if first_dt is not None and first_dt > start.to_datetime().date():
         last_dt = start.to_datetime()
     current = last_dt
+    st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
+    end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
+    articles = [title.encode("utf8")]
+    print 'Getting', articles, project, 'from', st, 'to', end
     try:
-        st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
-        end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
-        articles = [title]
-        print 'Getting', articles, project, 'from', st, 'to', end
         resp = p.article_views(project + '.wikipedia', articles, start=st, end=end)
+    except:
+      print 'Unable to get', articles, project, 'from', st, 'to', end
+    else:
         time.sleep(.1)
         pageid = row.pageid
         for dv in resp.keys():
-            pv = resp[dv][title.replace(' ', '_')]
+            pv = resp[dv][title.encode("utf8").replace(' ', '_')]
             if pv is not None:
               q = query.format(pageid, project, dv, pv)
               res = cur.execute(q)
               conn.commit()
-    except:
-      print 'Unable to get', articles, project, 'from', st, 'to', end
 
 """
     nnow = datetime.datetime.combine(nnow, datetime.time(0))
