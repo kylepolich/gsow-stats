@@ -102,6 +102,8 @@ for r in range(df2.shape[0]):
     first_dt = row['first_dt']
     start = row['start']
     project = row['lang']
+    # Pandas has the right encoding, but assigning it errors it
+    # Atheïsme  Athe\xefsme
     title = row['title'].strip()
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
@@ -112,21 +114,20 @@ for r in range(df2.shape[0]):
     current = last_dt
     st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
     end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
-    articles = [title.encode("utf8")]
+    articles = [title.encode('utf8')]
     print 'Getting', articles, project, 'from', st, 'to', end
     try:
         resp = p.article_views(project + '.wikipedia', articles, start=st, end=end)
-    except:
-      print 'Unable to get', articles, project, 'from', st, 'to', end
-    else:
-        time.sleep(.1)
         pageid = row.pageid
         for dv in resp.keys():
-            pv = resp[dv][title.encode("utf8").replace(' ', '_')]
+            pv = resp[dv][title.encode('utf8').replace(' ', '_')]
             if pv is not None:
               q = query.format(pageid, project, dv, pv)
               res = cur.execute(q)
               conn.commit()
+    except:
+      print 'Unable to get', articles, project, 'from', st, 'to', end
+      time.sleep(.1)
 
 """
     nnow = datetime.datetime.combine(nnow, datetime.time(0))
