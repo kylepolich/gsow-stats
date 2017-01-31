@@ -79,7 +79,10 @@ query = """
     having max(coalesce(t2.dt, '2000-01-01')) < DATE_FORMAT(DATE_ADD(now(), INTERVAL -2 DAY), '%Y-%m-%d')
 """
 
+cur = conn.cursor()
+cur.execute("SET NAMES utf8")
 df2 = pd.read_sql(query, conn)
+cur.close()
 
 query = "INSERT INTO page_views (pageid, project, dt, views) VALUES({}, '{}', '{}', {}) ON DUPLICATE KEY UPDATE views=VALUES(views)"
 
@@ -91,6 +94,7 @@ print nnow
 nday = nnow.day
 
 cur = conn.cursor()
+cur.execute("SET NAMES utf8")
 for r in range(df2.shape[0]):
     row = df2.iloc[r]
     last_dt = row['last_dt']
