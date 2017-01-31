@@ -4,6 +4,7 @@
   include("header.php");
   include("../config.php");
   $conn = mysqli_connect($host, $user, $password, "gsow");
+	$conn->set_charset("utf8");
   if (isset($_POST['act'])) {
     if ($_POST['act'] == 'add') {
       if (trim($_POST['tag']) != "") {
@@ -96,23 +97,21 @@ var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var parseDate = d3.time.format("%Y-%m-%d").parse;
+var parseDate = d3.timeFormat("%Y-%m-%d").parse;
 
-var x = d3.time.scale()
+var x = d3.scaleTime()
     .range([0, width]);
 
-var y = d3.scale.linear()
+var y = d3.scaleLinear()
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+var xAxis = d3.select(".axis")
+    .call(d3.axisBottom(x));
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
+var yAxis = d3.select(".axis")
+    .call(d3.axisLeft(y));
 
-var line = d3.svg.line()
+var line = d3.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.views); });
 
@@ -126,7 +125,8 @@ d3.tsv("page-data.php?pageid=<?php echo($pageid); ?>", function(error, data) {
   if (error) throw error;
 
   data.forEach(function(d) {
-    d.date = parseDate(d.date);
+    //d.date = parseDate(d.date);
+    d.date = Date.parse(d.date);
     d.views = +d.views;
   });
 
@@ -136,12 +136,12 @@ d3.tsv("page-data.php?pageid=<?php echo($pageid); ?>", function(error, data) {
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      .call(d3.axisBottom(x));
 
   svg.append("g")
       .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
+      .call(d3.axisLeft(y))
+      .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
