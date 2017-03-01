@@ -49,10 +49,14 @@ for r in range(df.shape[0]):
     keys = pages.keys()
     if len(keys)==1:
       key = keys[0]
-      pageid = pages[key]['pageid']
-      q2 = q.format(pageid, editid)
-      cur.execute(q2)
-      conn.commit()
+      pg = pages[key]
+      if pg.has_key('pageid'):
+        pageid = pg['pageid']
+        q2 = q.format(pageid, editid)
+        cur.execute(q2)
+        conn.commit()
+      else:
+        print "Missing page: " + key
 
 cur.close()
 
@@ -103,7 +107,6 @@ for r in range(df2.shape[0]):
     start = row['start']
     project = row['lang']
     # Pandas has the right encoding, but assigning it errors it
-    # Atheïsme  Athe\xefsme
     title = row['title'].strip()
     if last_dt is None:
         last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
