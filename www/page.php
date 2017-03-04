@@ -52,7 +52,7 @@
     $e = array("name" => $r['name'], "c" => $r['c']);
     array_push($editors, $e);
   }
-  $result = mysqli_query($conn, "select sum(views) as total_views from page_views where pageid=" . $pageid . " and dt > (select start from edits where pageid=" . $pageid . ")");
+  $result = mysqli_query($conn, "select sum(views) as total_views from page_views where pageid=" . $pageid . " and dt >= (select start from edits where pageid=" . $pageid . ")");
   while ($r = mysqli_fetch_array($result)) {
     $pvs = $r['total_views'];
   }
