@@ -124,6 +124,12 @@ for r in range(df2.shape[0]):
         pageid = row.pageid
         for dv in resp.keys():
             pv = resp[dv][title.encode('utf8').replace(' ', '_')]
+            if pv is None:
+              rdt = resp[dv]
+              alts = rdt.keys()
+              alts.remove(articles[0])
+              if len(alts) > 0:
+                pv = rdt[alts[0]]
             if pv is not None:
               q = query.format(pageid, project, dv, pv)
               res = cur.execute(q)
