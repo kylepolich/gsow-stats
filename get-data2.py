@@ -127,9 +127,12 @@ for r in range(df2.shape[0]):
             if pv is None:
               rdt = resp[dv]
               alts = rdt.keys()
-              alts.remove(articles[0])
-              if len(alts) > 0:
-                pv = rdt[alts[0]]
+              if articles[0] in alts:
+                alts.remove(articles[0])
+              i = 0
+              while i < len(alts) and pv is None:
+                pv = rdt[alts[i]]
+                i+=1
             if pv is not None:
               q = query.format(pageid, project, dv, pv)
               res = cur.execute(q)
