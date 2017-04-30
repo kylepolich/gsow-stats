@@ -85,21 +85,28 @@ Frozen Header
     <input type='submit' value='Search' />
   </form>
   <br/><br/>
-
   <div style='width: 500px;'>
   <?php
-    $q = "select tag, count(distinct pageid) as c from tags group by tag order by count(distinct pageid) desc;";
+    $q = "select t1.tag, t2.tag_group, count(distinct t1.pageid) as c
+          from tags t1
+          join tag_group t2
+           on t1.tag = t2.tag
+          group by t1.tag, t2.tag_group
+          order by t2.tag_group, t1.tag;";
     $result = mysqli_query($conn, $q);
-    $i=0;
+    echo("<table><tr><td>");
+    $last_tg = "___zzz___";
     while ($row = mysqli_fetch_array($result)) {
       $tag = $row['tag'];
-      $c = $row['c'];
-      if ($i > 0) {
-        echo(", ");
+      $tg = $row['tag_group'];
+      if (strcmp($tg, $last_tg) != 0) {
+        echo("</td><td valign='top'><b>" . $tg . "</b><br/>");
       }
-      echo("<a href='index.php?tag=" . $tag . "'><nobr>" . $tag . " (" . $c . ")</nobr></a>");
-      $i = $i + 1;
+      $last_tg = $tg;
+      $c = $row['c'];
+      echo("<a href='index.php?tag=" . $tag . "'><nobr>" . $tag . " (" . $c . ")</nobr></a><br />");
     }
+    echo("</td></tr></table>");
   ?>
   </div>
   </center>
@@ -133,7 +140,7 @@ Frozen Header
     <td><?php echo(number_format($row["views"])); ?></td>
     <td><?php echo(number_format($row["last_30"])); ?></td>
     <td><?php echo(number_format($row["last_7"])); ?></td>
-    <td><?php echo($row["start"]); ?></td>
+    <td><?php echo(substr($row["start"], 0, 10)); ?></td>
     <td><?php echo($row["max_dt"]); ?></td>
     <td>
       <form action='index.php' method=post style='display: inline'>
