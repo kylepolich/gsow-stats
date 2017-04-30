@@ -87,9 +87,9 @@ Frozen Header
   <br/><br/>
   <div style='width: 500px;'>
   <?php
-    $q = "select t1.tag, t2.tag_group, count(distinct t1.pageid) as c
+    $q = "select t1.tag, ifnull(t2.tag_group, '') as tag_group, count(distinct t1.pageid) as c
           from tags t1
-          join tag_group t2
+          left join tag_group t2
            on t1.tag = t2.tag
           group by t1.tag, t2.tag_group
           order by t2.tag_group, t1.tag;";
