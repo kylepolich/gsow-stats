@@ -43,3 +43,8 @@ table.tablesorter td {
 }
 
 
+.tcell {
+max-height: 300px;
+overflow:auto;
+}
+
