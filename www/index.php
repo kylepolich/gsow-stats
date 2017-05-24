@@ -86,7 +86,7 @@ Frozen Header
   </form>
   <br/><br/>
 
-  <div style='width: 500px;'>
+  <div>
   <?php
     $q = "select tag, count(distinct pageid) as c from tags group by tag order by count(distinct pageid) desc;";
     $result = mysqli_query($conn, $q);
