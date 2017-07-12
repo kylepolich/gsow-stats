@@ -48,7 +48,7 @@
   }
 ?>
 <form action='admin.php' method=POST>
-<h1><?php echo($act); ?> page</h1>
+<h1><?php echo($act); ?> a page</h1>
 <table>
   <tr>
     <td>Page name:</td>
@@ -90,7 +90,7 @@
     <td><input name='dt' value="<?php echo($dt); ?>" /></td>
   </tr>
   <tr>
-    <td colspan=2 align=right><input type='submit' value='<?php echo($act); ?>' /></td>
+    <td colspan=2 align=right><input style='width:100%' type='submit' value='<?php echo($act); ?>' /></td>
   </tr>
 </table>
 </form>

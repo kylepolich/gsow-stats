@@ -158,13 +158,15 @@ d3.tsv("page-data.php?pageid=<?php echo($pageid); ?>", function(error, data) {
 
 <hr/>
 
-Add keyword:
+<center>
 <form action='page.php' method='POST'>
+  Add tag:
   <input type='hidden' name='pageid' value='<?php echo($pageid); ?>' />
   <input type='hidden' name='act' value='add' />
   <input name='tag' />
   <input type='submit' value='Add' />
 </form>
+</center>
 <br/>
 
 <table id="myTable" class="tablesorter">
