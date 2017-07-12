@@ -63,7 +63,7 @@
 
 <table>
   <tr>
-    <td>Total views since first GSoW edit:</td>
+    <td>Total pageviews since first GSoW edit:</td>
     <td><b><?php echo($pvs); ?></b></td>
   </tr>
   <tr>

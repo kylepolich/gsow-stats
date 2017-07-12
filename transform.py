@@ -25,9 +25,10 @@ join tags t2
 """
 
 df = pd.read_sql(query, conn)
-df['c'] = 'x'
+df['c'] = 1
 df['ind'] = df['page'] + '(' + df['lang'] + ')'# + df['start']
-df2 = df.pivot(index='ind', columns='tag', values='c')
+df['tag'] = df['tag'].astype(str)
+df2 = pd.pivot_table(df, index='ind', columns='tag', values='c')
 df2.fillna('', inplace=True)
 
 df2.columns = map(lambda x: x.replace(' ', '_'), df2.columns.tolist())
