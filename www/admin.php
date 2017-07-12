@@ -23,8 +23,9 @@
       }
       else {
         $dt = $_POST['dt'];
+        $lang = $_POST['lang'];
         $page = str_replace("'", "\'", $page);
-        $query = "UPDATE edits SET start='$dt' WHERE page='$page'";
+        $query = "UPDATE edits SET start='$dt' WHERE page='$page' and lang='$lang'";
         $result = mysqli_query($conn, $query);
         $rows = mysqli_affected_rows($conn);
         if ($rows == 1) {
