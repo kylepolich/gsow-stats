@@ -1,6 +1,6 @@
 <?php
   include("header.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow");
+  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
   $page = "";
   $dt = "YYYY-MM-DD";
   $act = "Add";

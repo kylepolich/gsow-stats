@@ -3,8 +3,8 @@
   ini_set('display_startup_errors',1);
   include("header.php");
   include("../config.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow");
-	$conn->set_charset("utf8");
+  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
+  $conn->set_charset("utf8");
   if (isset($_POST['act'])) {
     if ($_POST['act'] == 'add') {
       if (trim($_POST['tag']) != "") {
