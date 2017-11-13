@@ -3,8 +3,8 @@
   ini_set('display_startup_errors',1);
   include("header.php");
   include("../config.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow");
-	$conn->set_charset("utf8");
+  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
+  $conn->set_charset("utf8");
   if (isset($_POST['act'])) {
     if ($_POST['act'] == 'add') {
       if (trim($_POST['tag']) != "") {
@@ -158,13 +158,15 @@ d3.tsv("page-data.php?pageid=<?php echo($pageid); ?>", function(error, data) {
 
 <hr/>
 
-Add keyword:
+<center>
 <form action='page.php' method='POST'>
+  Add tag:
   <input type='hidden' name='pageid' value='<?php echo($pageid); ?>' />
   <input type='hidden' name='act' value='add' />
   <input name='tag' />
   <input type='submit' value='Add' />
 </form>
+</center>
 <br/>
 
 <table id="myTable" class="tablesorter">

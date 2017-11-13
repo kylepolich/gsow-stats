@@ -10,7 +10,7 @@ Frozen Header
   ini_set('display_startup_errors',1);
   error_reporting(-1);
   include("../config.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow");
+  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
 	$conn->set_charset("utf8");
   $msg = "";
   if (isset($_POST['edit_id'])) {
@@ -92,7 +92,7 @@ Frozen Header
     <input type='submit' value='Search' />
   </form>
   <br/><br/>
-  <div style='width: 500px;'>
+  <div style='width: 100%;'>
   <?php
     $q = "select t1.tag, ifnull(t2.tag_group, '') as tag_group, count(distinct t1.pageid) as c
           from tags t1
@@ -101,19 +101,19 @@ Frozen Header
           group by t1.tag, t2.tag_group
           order by t2.tag_group, t1.tag;";
     $result = mysqli_query($conn, $q);
-    echo("<table><tr><td>");
+    echo("<table><tr><td><div class='tcell'>");
     $last_tg = "___zzz___";
     while ($row = mysqli_fetch_array($result)) {
       $tag = $row['tag'];
       $tg = $row['tag_group'];
       if (strcmp($tg, $last_tg) != 0) {
-        echo("</td><td valign='top'><b>" . $tg . "</b><br/>");
+        echo("</div></td><td valign='top'><div class='tcell'><b>" . $tg . "</b><br/>");
       }
       $last_tg = $tg;
       $c = $row['c'];
       echo("<a href='index.php?tag=" . $tag . "'><nobr>" . $tag . " (" . $c . ")</nobr></a><br />");
     }
-    echo("</td></tr></table>");
+    echo("</div></td></tr></table>");
   ?>
   </div>
   </center>
