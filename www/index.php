@@ -32,19 +32,26 @@ Frozen Header
   if ($tag != "") {
     $tagq = "JOIN tags t99 on t1.pageid = t99.pageid and t99.tag='" . $tag . "' ";
   }
-  $q = "SELECT t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid, sum(t3.views) as views, min(t3.dt) as min_dt, max(t3.dt) as max_dt " .
-       " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 30 day) AND NOW() THEN t3.views ELSE 0 END) as last_30 " .
-       " , SUM(CASE WHEN t3.dt BETWEEN DATE_SUB(NOW(), INTERVAl 7 day) AND NOW() THEN t3.views ELSE 0 END) as last_7 " .
-       " , coalesce(t4.c, 0) as tags " .
-       "FROM edits t1 " .
-       "LEFT JOIN page_views t3 " .
-       " on t1.pageid=t3.pageid " .
-       " and t1.start <= t3.dt " .
-       " and t3.project=t1.lang " .
-       "left join (select pageid, count(*) as c from tags group by pageid ) t4 " .
-       " on t1.pageid = t4.pageid " .
-       $tagq .
-       "GROUP BY t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid ORDER BY t1.page";
+  $q = "
+    SELECT t1.edit_id, t1.page, t1.lang, t1.start
+    , t2.*
+    , coalesce(t3.c, 0) as tags 
+    FROM edits t1 
+    LEFT JOIN (
+      SELECT pageid, project, min(dt) as min_dt, max(dt) as max_dt, sum(views) as views
+      , SUM(views) as last_30 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_7 
+      FROM page_views
+      WHERE dt > DATE_SUB(NOW(), INTERVAl 30 day)
+      GROUP BY pageid, project
+    ) t2
+    on  t1.pageid = t3.pageid 
+    and t1.lang   = t3.project
+    left join (select pageid, count(*) as c from tags group by pageid ) t3
+    on t1.pageid = t3.pageid 
+    " . $tagq . "
+    GROUP BY t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid ORDER BY t1.page
+";
   $result = mysqli_query($conn, $q);
   $rows = array();
   $tot = 0;
