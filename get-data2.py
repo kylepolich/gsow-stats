@@ -15,11 +15,12 @@ cp = ConfigParser.ConfigParser()
 cp.readfp(open(propertiesFile))
 
 db_host     = cp.get('Params', 'db_host')
+db_port     = int(cp.get('Params', 'db_port'))
 db_user     = cp.get('Params', 'db_user')
 db_password = cp.get('Params', 'db_password')
 db_db       = cp.get('Params', 'db_db')
 
-conn = mdb.connect(host=db_host, user=db_user, passwd=db_password, db=db_db, charset = 'utf8')
+conn = mdb.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_db, charset = 'utf8')
 
 cache = {}
 

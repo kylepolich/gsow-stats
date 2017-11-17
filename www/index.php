@@ -45,11 +45,11 @@ Frozen Header
       WHERE dt > DATE_SUB(NOW(), INTERVAl 30 day)
       GROUP BY pageid, project
     ) t2
-    on  t1.pageid = t3.pageid 
-    and t1.lang   = t3.project
+    on  t1.pageid = t2.pageid 
+    and t1.lang   = t2.project
     left join (select pageid, count(*) as c from tags group by pageid ) t3
     on t1.pageid = t3.pageid 
-    " . $tagq . "
+    " . $tagq . " 
     GROUP BY t1.edit_id, t1.page, t1.lang, t1.start, t1.pageid ORDER BY t1.page
 ";
   $result = mysqli_query($conn, $q);
@@ -73,7 +73,7 @@ Frozen Header
 ?>
   <table>
     <tr>
-      <td>Total:</td>
+      <td>All time total:</td>
       <td align='right'><?php echo(number_format($tot)); ?></td>
     </tr>
     <tr>
