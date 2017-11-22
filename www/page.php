@@ -68,7 +68,7 @@
   </tr>
   <tr>
     <td>First GSoW edit:</td>
-    <td><?php echo($row['start']); ?></td>
+    <td><?php echo(substr($row['start'], 0, 10)); ?></td>
   </tr>
 </table>
 
