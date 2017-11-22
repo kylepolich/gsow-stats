@@ -40,14 +40,14 @@ Frozen Header
     LEFT JOIN (
       SELECT pageid, project, min(dt) as min_dt, max(dt) as max_dt, sum(views) as views
       , SUM(views) as last_30 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_14 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 14 day) THEN views ELSE 0 END) as last_14 
       , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_7 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_6 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_5 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_4 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_3 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_2 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_1 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 6 day) THEN views ELSE 0 END) as last_6 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 5 day) THEN views ELSE 0 END) as last_5 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 4 day) THEN views ELSE 0 END) as last_4 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 3 day) THEN views ELSE 0 END) as last_3 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 2 day) THEN views ELSE 0 END) as last_2 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 1 day) THEN views ELSE 0 END) as last_1 
       FROM page_views
       WHERE dt > DATE_SUB(NOW(), INTERVAl 30 day)
       GROUP BY pageid, project
