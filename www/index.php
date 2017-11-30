@@ -65,11 +65,11 @@ Frozen Header
     array_push($rows, $row);
   }
 
-  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 365 day) GROUP BY dt ORDER BY dt"
-  $dts = array()
-  $views = array()
-  $dts.push("Date")
-  $views.push("Views")
+  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 365 day) GROUP BY dt ORDER BY dt";
+  $dts = array();
+  $views = array();
+  $dts.push("Date");
+  $views.push("Views");
   $result = mysqli_query($conn, $q);
   while ($row = mysqli_fetch_array($result)) {
     $dts.push($row['dt']);
