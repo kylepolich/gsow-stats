@@ -39,14 +39,7 @@ Frozen Header
     FROM edits t1 
     LEFT JOIN (
       SELECT pageid, project, min(dt) as min_dt, max(dt) as max_dt, sum(views) as views
-      , SUM(views) as last_30 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 14 day) THEN views ELSE 0 END) as last_14 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 7 day) THEN views ELSE 0 END) as last_7 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 6 day) THEN views ELSE 0 END) as last_6 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 5 day) THEN views ELSE 0 END) as last_5 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 4 day) THEN views ELSE 0 END) as last_4 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 3 day) THEN views ELSE 0 END) as last_3 
-      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 2 day) THEN views ELSE 0 END) as last_2 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 30 day) THEN views ELSE 0 END) as last_30 
       , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 1 day) THEN views ELSE 0 END) as last_1 
       FROM page_views
       WHERE dt > DATE_SUB(NOW(), INTERVAl 30 day)
@@ -63,28 +56,26 @@ Frozen Header
   $rows = array();
   $tot = 0;
   $tot_30 = 0;
-  $tot_14 = 0;
-  $tot_7 = 0;
-  $tot_6 = 0;
-  $tot_5 = 0;
-  $tot_4 = 0;
-  $tot_3 = 0;
-  $tot_2 = 0;
   $tot_1 = 0;
   $otag = $tag;
   while ($row = mysqli_fetch_array($result)) {
     $tot = $tot + $row['views'];
     $tot_30 = $tot_30 + $row['last_30'];
-    $tot_14 = $tot_14 + $row['last_14'];
-    $tot_7 = $tot_7 + $row['last_7'];
-    $tot_6 = $tot_6 + $row['last_6'];
-    $tot_5 = $tot_5 + $row['last_5'];
-    $tot_4 = $tot_4 + $row['last_4'];
-    $tot_3 = $tot_3 + $row['last_3'];
-    $tot_2 = $tot_2 + $row['last_2'];
     $tot_1 = $tot_1 + $row['last_1'];
     array_push($rows, $row);
   }
+
+  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 365 day) GROUP BY dt ORDER BY dt"
+  $dts = array()
+  $views = array()
+  $dts.push("Date")
+  $views.push("Views")
+  $result = mysqli_query($conn, $q);
+  while ($row = mysqli_fetch_array($result)) {
+    $dts.push($row['dt']);
+    $views.push($row['views']);
+  }
+
   if (isset($_GET['msg']) && $_GET['msg'] != '') {
     $msg = $_GET['msg'];
   }
@@ -102,38 +93,13 @@ Frozen Header
       <td align='right'><?php echo(number_format($tot_30)); ?></td>
     </tr>
     <tr>
-      <td>Total last 14 days:</td>
-      <td align='right'><?php echo(number_format($tot_14)); ?></td>
-    </tr>
-    <tr>
-      <td>Total last 7 days:</td>
-      <td align='right'><?php echo(number_format($tot_7)); ?></td>
-    </tr>
-    <tr>
-      <td>Total last 6 days:</td>
-      <td align='right'><?php echo(number_format($tot_6)); ?></td>
-    </tr>
-    <tr>
-      <td>Total last 5 days:</td>
-      <td align='right'><?php echo(number_format($tot_5)); ?></td>
-    </tr>
-    <tr>
-      <td>Total last 4 days:</td>
-      <td align='right'><?php echo(number_format($tot_4)); ?></td>
-    </tr>
-    <tr>
-      <td>Total last 3 days:</td>
-      <td align='right'><?php echo(number_format($tot_3)); ?></td>
-    </tr>
-    <tr>
-      <td>Total last 2 days:</td>
-      <td align='right'><?php echo(number_format($tot_2)); ?></td>
-    </tr>
-    <tr>
       <td>Total last 1 days:</td>
       <td align='right'><?php echo(number_format($tot_1)); ?></td>
     </tr>
   </table>
+
+  <div id="views_timeseries">
+
 
   <center>
   <form action='index.php' method='get' style='display: inline'>
@@ -236,7 +202,17 @@ $(document).ready(function() {
 		});
 
 	$("#myTable").tablesorter({headers : {4: {sorter: 'cn'}, 5: {sorter: 'cn'}, 3: {sorter: 'cn'} } });
+
+  bb.generate({
+      bindto: "#views_timeseries",
+      data: {
+          x: 'x',
+          columns: [ <?php echo(json_encode($dts)); ?>, <?php echo(json_encode($views)); ?> ]
+      },
+      axis: { x: { type: 'timeseries', tick: { rotate: 90, format: '%Y-%m-%d' } } }
+  });
 });
+
 
 </script>
 <?php
