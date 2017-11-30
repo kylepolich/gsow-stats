@@ -40,6 +40,7 @@ Frozen Header
     LEFT JOIN (
       SELECT pageid, project, min(dt) as min_dt, max(dt) as max_dt, sum(views) as views
       , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 30 day) THEN views ELSE 0 END) as last_30 
+      , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 1 day) THEN views ELSE 0 END) as last_7 
       , SUM(CASE WHEN dt > DATE_SUB(NOW(), INTERVAl 1 day) THEN views ELSE 0 END) as last_1 
       FROM page_views
       WHERE dt > DATE_SUB(NOW(), INTERVAl 30 day)
@@ -56,11 +57,13 @@ Frozen Header
   $rows = array();
   $tot = 0;
   $tot_30 = 0;
+  $tot_7 = 0;
   $tot_1 = 0;
   $otag = $tag;
   while ($row = mysqli_fetch_array($result)) {
     $tot = $tot + $row['views'];
     $tot_30 = $tot_30 + $row['last_30'];
+    $tot_7 = $tot_7 + $row['last_7'];
     $tot_1 = $tot_1 + $row['last_1'];
     array_push($rows, $row);
   }
@@ -206,7 +209,7 @@ $(document).ready(function() {
   bb.generate({
       bindto: "#views_timeseries",
       data: {
-          x: 'x',
+          x: 'Date',
           columns: [ <?php echo(json_encode($dts)); ?>, <?php echo(json_encode($views)); ?> ]
       },
       axis: { x: { type: 'timeseries', tick: { rotate: 90, format: '%Y-%m-%d' } } }
