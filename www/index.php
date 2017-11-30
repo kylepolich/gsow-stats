@@ -101,7 +101,7 @@ Frozen Header
     </tr>
   </table>
 
-  <div id="views_timeseries">
+  <div id="views_timeseries"></div>
 
 
   <center>
