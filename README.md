@@ -1,5 +1,15 @@
 # gsow-stats
 
+## Running
+
+First build:
+
+`docker build -t gsow .`
+
+To login:
+
+`docker run -it gsow`
+
 ## Project Goals
 
 * Define a metric measuring the significance of a change (e.g. include missing hyperlink vs. completely new article written)
