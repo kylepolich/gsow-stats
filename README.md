@@ -12,6 +12,7 @@ To login:
 
 ## Project Goals
 
+* Fix unicode issues
 * Define a metric measuring the significance of a change (e.g. include missing hyperlink vs. completely new article written)
 * Track the number of page views for edited page of GSoW editors
 * Provide exploratory and visual tools to assess and measure the impact of the team's efforts
@@ -20,4 +21,4 @@ To login:
 
 Web application files live in `www/`
 
-Backend data retrieval is done by `get-data2.py1
+Backend data retrieval is done by `get-data2.py`
