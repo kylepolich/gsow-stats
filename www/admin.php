@@ -81,8 +81,8 @@
         <option value="cs">cs - Czech</option>
         <option value="ro">ro - Romanian</option>
         <option value="zh">zh - Chinese</option>
-        <option value="zh">no - Norwegian Bokmål</option>
-        <option value="zh">nn - Norwegian Nynorsk</option>
+        <option value="no">no - Norwegian Bokmål</option>
+        <option value="nn">nn - Norwegian Nynorsk</option>
       </select>
       <?php } ?>
     </td>
