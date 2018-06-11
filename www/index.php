@@ -11,7 +11,7 @@ Frozen Header
   error_reporting(-1);
   include("../config.php");
   $conn = mysqli_connect($host, $user, $password, "gsow", $port);
-	$conn->set_charset("utf8");
+  $conn->set_charset("utf8");
   $msg = "";
   if (isset($_POST['edit_id'])) {
     $q = "DELETE FROM edits where edit_id = " . $_POST['edit_id'] . " and lang='" . $_POST['lang'] . "'";
