@@ -1,6 +1,7 @@
 <?php
   include("header.php");
   $conn = mysqli_connect($host, $user, $password, "gsow", $port);
+  $conn->set_charset('utf8');
   $page = "";
   $dt = "YYYY-MM-DD";
   $act = "Add";
