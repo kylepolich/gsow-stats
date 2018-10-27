@@ -1,0 +1,9 @@
+<html>
+  <body>
+    <h1>Hello, <?php echo($_SERVER['REMOTE_USER']) ?></h1>
+    <h2>Headers:</h2>
+    <pre><?php print_r(array_map("htmlentities", apache_request_headers())); ?></pre>
+    <h2>Environment:</h2>
+    <pre><?php print_r(array_map("htmlentities", $_SERVER)); ?></pre>
+  </body>
+</html>

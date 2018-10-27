@@ -3,6 +3,7 @@
   ini_set('display_errors',1);
   ini_set('display_startup_errors',1);
   error_reporting(-1);
+  $headers = apache_request_headers();
 ?>
 <!doctype html>
 
@@ -40,6 +41,18 @@
 <a href="index.php">Home</a>
 |
 <a href="admin.php">Admin</a>
+|
+<a href="<?php echo($oauth2_redir_url . '?logout=' . urlencode($logout_url)); ?>">
+<?php
+if (isset($headers["OIDC_CLAIM_picture"])) { ?>
+  <img alt="Log Out" title="Log Out <?php echo($headers["OIDC_CLAIM_email"]) ?>" width="32" height="32" src='<?php print $headers["OIDC_CLAIM_picture"]?>' />
+<?php
+} else { ?>
+  Log Out
+<?php
+}
+?>
+</a> 
 <!--
 |
 <a href="summary.php">Summary</a>
