@@ -85,23 +85,25 @@ Frozen Header
     echo("<center>" . $msg . "</center>");
   }
 ?>
-  <table>
+  <table style="font-size: 18pt;">
     <tr>
       <td>All time total:</td>
-      <td align='right'><?php echo(number_format($tot)); ?></td>
+      <td align='right'><strong><?php echo(number_format($tot)); ?></strong></td>
     </tr>
     <tr>
       <td>Total last 30 days:</td>
-      <td align='right'><?php echo(number_format($tot_30)); ?></td>
+      <td align='right'><strong><?php echo(number_format($tot_30)); ?></strong></td>
     </tr>
     <tr>
       <td>Total last 1 days:</td>
-      <td align='right'><?php echo(number_format($tot_1)); ?></td>
+      <td align='right'><strong><?php echo(number_format($tot_1)); ?></strong></td>
     </tr>
   </table>
 
-  <div id="views_timeseries"></div>
-
+  <div id="views_timeseries">
+    <center><i id="click_for_chart" class="fas fa-chart-line fa-4x" title="Click to load time-series graph of views"></i></center>
+    <br/>
+  </div>
 
   <center>
   <form action='index.php' method='get' style='display: inline'>
@@ -156,7 +158,7 @@ Frozen Header
     echo("<tr>");
     echo("<td>" . $row['lang'] . "</td>");
     if ($row["pageid"] != null) {
-      echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . " (" . $row["tags"] . ")" . "</a></td>");
+      echo("<td><a href='page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . " (" . $row["tags"] . ")" . "</a></td>");
     } else {
       echo("<td>" . $row["page"] . "(" . $row["tags"] . ")" . " (ERROR: not found)</td>");
     }
@@ -204,7 +206,9 @@ $(document).ready(function() {
 		});
 
 	$("#myTable").tablesorter({headers : {4: {sorter: 'cn'}, 5: {sorter: 'cn'}, 3: {sorter: 'cn'} } });
+});
 
+$("#views_timeseries").click(function() {
   bb.generate({
       bindto: "#views_timeseries",
       data: {
