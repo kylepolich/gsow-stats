@@ -3,7 +3,7 @@ import MySQLdb as mdb
 import pandas as pd
 import numpy as np
 import json
-import ConfigParser
+import configparser
 import time
 import datetime
 import urllib
@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from mwviews.api import PageviewsClient
 
 propertiesFile = "my.properties"
-cp = ConfigParser.ConfigParser()
+cp = configparser.ConfigParser()
 cp.readfp(open(propertiesFile))
 
 db_host     = cp.get('Params', 'db_host')
@@ -40,13 +40,13 @@ for r in range(df.shape[0]):
   title = row['page']
   lang = row['lang']
   url = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote(title.encode("utf8"))
-  print 'Getting', url
+  print('Getting', url)
   req = requests.get(url)
   j = json.loads(req.text)
   try:
     pages = j['query']['pages']
   except:
-    print 'Error on ', r, title, url
+    print('Error on ', r, title, url)
   else:
     keys = pages.keys()
     if len(keys)==1:
@@ -58,7 +58,7 @@ for r in range(df.shape[0]):
         cur.execute(q2)
         conn.commit()
       else:
-        print "Missing page: " + title
+        print("Missing page: " + title)
 
 cur.close()
 
@@ -97,7 +97,7 @@ query = "INSERT INTO page_views (pageid, project, dt, views) VALUES({}, '{}', '{
 
 nnow = datetime.datetime.utcnow()
 
-print nnow
+print(nnow)
 nday = nnow.day
 
 cur = conn.cursor()
@@ -111,16 +111,17 @@ for r in range(df2.shape[0]):
     # Pandas has the right encoding, but assigning it errors it
     title = row['title'].strip()
     if last_dt is None:
-        last_dt = start#datetime.datetime.now() - datetime.timedelta(365*10,0)
+        last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S') #datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
-        last_dt = datetime.datetime.combine(row['last_dt'], datetime.time(0))
-    if first_dt is not None and first_dt > start.to_datetime().date():
-        last_dt = start.to_datetime()
+        last_dt = datetime.datetime.combine(datetime.datetime.strptime(row['last_dt'], '%Y-%m-%d %H:%M:%S'), datetime.time(0))
+    if first_dt is not None and first_dt > datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S').date():
+        last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
     current = last_dt
+    print('Working with last_dt', last_dt)
     st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
     end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
     articles = [title.encode('utf8')]
-    print 'Getting', articles, project, 'from', st, 'to', end
+    print('Getting', articles, project, 'from', st, 'to', end)
     try:
         resp = p.article_views(project + '.wikipedia', articles, start=st, end=end, agent='user')
         pageid = row.pageid
@@ -140,7 +141,7 @@ for r in range(df2.shape[0]):
               res = cur.execute(q)
               conn.commit()
     except:
-      print 'Unable to get', articles, project, 'from', st, 'to', end
+      print('Unable to get', articles, project, 'from', st, 'to', end)
       time.sleep(.1)
 
 """
