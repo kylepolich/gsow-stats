@@ -140,8 +140,8 @@ for r in range(df2.shape[0]):
               q = query.format(pageid, project, dv, pv)
               res = cur.execute(q)
               conn.commit()
-    except:
-      print('Unable to get', articles, project, 'from', st, 'to', end)
+    except Exception as e:
+      print('Unable to get', articles, project, 'from', st, 'to', end, 'because', e)
       time.sleep(.1)
 
 """
