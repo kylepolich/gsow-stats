@@ -58,7 +58,7 @@ for r in range(df.shape[0]):
         cur.execute(q2)
         conn.commit()
       else:
-        print "Missing page: " + key
+        print "Missing page: " + title
 
 cur.close()
 
