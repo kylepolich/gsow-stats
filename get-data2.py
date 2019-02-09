@@ -19,6 +19,7 @@ db_port     = int(cp.get('Params', 'db_port'))
 db_user     = cp.get('Params', 'db_user')
 db_password = cp.get('Params', 'db_password')
 db_db       = cp.get('Params', 'db_db')
+wp_agent    = cp.get('Params', 'wp_agent')
 
 conn = mdb.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_db, charset = 'utf8')
 
@@ -29,7 +30,7 @@ cache = {}
 query = "select * from edits where pageid is null"
 df = pd.read_sql(query, conn)
 
-p = PageviewsClient()
+p = PageviewsClient(user_agent=wp_agent)
 
 q = "UPDATE edits set pageid={} WHERE edit_id={}"
 cur = conn.cursor()
@@ -121,7 +122,7 @@ for r in range(df2.shape[0]):
     articles = [title.encode('utf8')]
     print 'Getting', articles, project, 'from', st, 'to', end
     try:
-        resp = p.article_views(project + '.wikipedia', articles, start=st, end=end)
+        resp = p.article_views(project + '.wikipedia', articles, start=st, end=end, agent='user')
         pageid = row.pageid
         for dv in resp.keys():
             pv = resp[dv][title.encode('utf8').replace(' ', '_')]
