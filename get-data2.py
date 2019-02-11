@@ -114,7 +114,7 @@ for r in range(df2.shape[0]):
     if last_dt is None:
         last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S') #datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
-        last_dt = datetime.datetime.combine(datetime.datetime.strptime(row['last_dt'], '%Y-%m-%d %H:%M:%S'), datetime.time(0))
+        last_dt = datetime.datetime.combine(last_dt, datetime.time(0))
     if first_dt is not None and first_dt > datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S').date():
         last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
     current = last_dt
