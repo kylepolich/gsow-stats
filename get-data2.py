@@ -126,10 +126,10 @@ for r in range(df2.shape[0]):
         resp = p.article_views(project + '.wikipedia', articles, start=st, end=end, agent='user')
         pageid = row.pageid
         for dv in resp.keys():
-            pv = resp[dv][title.encode('utf8').replace(' ', '_')]
+            pv = resp[dv][title.encode('utf8').replace(b' ', b'_')]
             if pv is None:
               rdt = resp[dv]
-              alts = rdt.keys()
+              alts = list(rdt.keys())
               if articles[0] in alts:
                 alts.remove(articles[0])
               i = 0
