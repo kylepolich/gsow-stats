@@ -40,7 +40,7 @@ for r in range(df.shape[0]):
   editid = row['edit_id']
   title = row['page']
   lang = row['lang']
-  url = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.quote(title.encode("utf8"))
+  url = 'https://' + lang + '.wikipedia.org/w/api.php?action=query&format=json&titles=' + urllib.parse.quote(title.encode("utf8"))
   print('Getting', url)
   req = requests.get(url)
   j = json.loads(req.text)
