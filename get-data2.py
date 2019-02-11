@@ -9,6 +9,7 @@ import datetime
 import urllib
 from dateutil.relativedelta import relativedelta
 from mwviews.api import PageviewsClient
+import traceback
 
 propertiesFile = "my.properties"
 cp = configparser.ConfigParser()
@@ -117,7 +118,6 @@ for r in range(df2.shape[0]):
     if first_dt is not None and first_dt > datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S').date():
         last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
     current = last_dt
-    print('Working with last_dt', last_dt)
     st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
     end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
     articles = [title.encode('utf8')]
@@ -142,6 +142,8 @@ for r in range(df2.shape[0]):
               conn.commit()
     except Exception as e:
       print('Unable to get', articles, project, 'from', st, 'to', end, 'because', e)
+      tb = traceback.format_exc()
+      print(tb)
       time.sleep(.1)
 
 """
@@ -155,5 +157,4 @@ for r in range(df2.shape[0]):
 """
 
 cur.close()
-
 
