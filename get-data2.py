@@ -33,7 +33,7 @@ df = pd.read_sql(query, conn)
 
 p = PageviewsClient(user_agent=wp_agent)
 
-q = "UPDATE edits set pageid={} WHERE edit_id={}"
+q = "UPDATE edits set pageid=%s WHERE edit_id=%s"
 cur = conn.cursor()
 for r in range(df.shape[0]):
   row = df.iloc[r]
@@ -55,8 +55,7 @@ for r in range(df.shape[0]):
       pg = pages[key]
       if 'pageid' in pg:
         pageid = pg['pageid']
-        q2 = q.format(pageid, editid)
-        cur.execute(q2)
+        cur.execute(q, (pageid, editid))
         conn.commit()
       else:
         print("Missing page: " + title)
