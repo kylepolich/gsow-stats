@@ -49,11 +49,11 @@ for r in range(df.shape[0]):
   except:
     print('Error on ', r, title, url)
   else:
-    keys = pages.keys()
+    keys = list(pages.keys())
     if len(keys)==1:
       key = keys[0]
       pg = pages[key]
-      if pg.has_key('pageid'):
+      if 'pageid' in pg:
         pageid = pg['pageid']
         q2 = q.format(pageid, editid)
         cur.execute(q2)
