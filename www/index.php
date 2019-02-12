@@ -10,7 +10,7 @@ Frozen Header
   ini_set('display_startup_errors',1);
   error_reporting(-1);
   include("../config.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
+  $conn = mysqli_connect($host, $user, $password, $dbname, $port);
   $conn->set_charset("utf8");
   $msg = "";
   if (isset($_POST['edit_id'])) {

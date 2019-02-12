@@ -36,7 +36,11 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
 </head>
-<body>
+<body
+ <?php if (preg_match('/_dev$/', $dbname)) { ?>
+  style="background-image: url(images/devel_db.png);"
+ <?php } ?>
+>
 
 <h1>GSoW Page View Tracker</h1>
 
