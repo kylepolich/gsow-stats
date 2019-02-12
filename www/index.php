@@ -18,7 +18,7 @@ Frozen Header
     $result = mysqli_query($conn, $q);
     //header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
     //return;
-    $msg="<h2>Delete successed</h2>";
+    $msg="<h2>Delete successful</h2>";
   }
   include("header.php");
   $tag = "";
