@@ -67,7 +67,7 @@ Frozen Header
     array_push($rows, $row);
   }
 
-  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 365 day) GROUP BY dt ORDER BY dt";
+  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 90 day) GROUP BY dt ORDER BY dt";
   $dts = array();
   $views = array();
   array_push($dts, "Date");
@@ -100,10 +100,12 @@ Frozen Header
     </tr>
   </table>
 
-  <div id="views_timeseries">
-    <center><i id="click_for_chart" class="fas fa-chart-line fa-4x" title="Click to load time-series graph of views"></i></center>
+  <center>
+  <div id="views_timeseries" style="width: 50%;">
+    <i id="click_for_chart" class="fas fa-chart-line fa-4x" title="Click to load time-series graph of views"></i>
     <br/>
   </div>
+  </center>
 
   <center>
   <form action='index.php' method='get' style='display: inline'>
@@ -215,7 +217,7 @@ $("#views_timeseries").click(function() {
           x: 'Date',
           columns: [ <?php echo(json_encode($dts)); ?>, <?php echo(json_encode($views)); ?> ]
       },
-      axis: { x: { type: 'timeseries', tick: { rotate: 90, format: '%Y-%m-%d' } } }
+      axis: { x: { type: 'timeseries', tick: { rotate: 45, format: '%Y-%m-%d' } } }
   });
 });
 
