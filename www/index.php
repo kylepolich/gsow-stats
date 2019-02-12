@@ -95,8 +95,8 @@ Frozen Header
       <td align='right'><strong><?php echo(number_format($tot_30)); ?></strong></td>
     </tr>
     <tr>
-      <td>Total last 1 days:</td>
-      <td align='right'><strong><?php echo(number_format($tot_1)); ?></strong></td>
+      <td>Total last 7 days:</td>
+      <td align='right'><strong><?php echo(number_format($tot_7)); ?></strong></td>
     </tr>
   </table>
 
