@@ -33,7 +33,7 @@ df = pd.read_sql(query, conn)
 
 p = PageviewsClient(user_agent=wp_agent)
 
-q = "UPDATE edits set pageid=%s WHERE edit_id=%s"
+q = "UPDATE edits set pageid=%s WHERE page=%s AND lang=%s"
 cur = conn.cursor()
 for r in range(df.shape[0]):
   row = df.iloc[r]
@@ -55,14 +55,12 @@ for r in range(df.shape[0]):
       pg = pages[key]
       if 'pageid' in pg:
         pageid = pg['pageid']
-        cur.execute(q, (pageid, editid))
+        cur.execute(q, (pageid, title, lang))
         conn.commit()
       else:
         print("Missing page: " + title)
 
 cur.close()
-
-
 
 
 # UPDATE PAGE VIEWS
@@ -111,7 +109,7 @@ for r in range(df2.shape[0]):
     # Pandas has the right encoding, but assigning it errors it
     title = row['title'].strip()
     if last_dt is None:
-        last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S') #datetime.datetime.now() - datetime.timedelta(365*10,0)
+        last_dt = datetime.datetime.strptime(start, '%Y-%m-%d') #datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
         last_dt = datetime.datetime.combine(last_dt, datetime.time(0))
     if first_dt is not None and first_dt > datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S').date():
