@@ -33,7 +33,7 @@ df = pd.read_sql(query, conn)
 
 p = PageviewsClient(user_agent=wp_agent)
 
-q = "UPDATE edits set pageid=%s WHERE page=%s AND lang=%s"
+q = "UPDATE edits set pageid=%s WHERE edit_id=%s"
 cur = conn.cursor()
 for r in range(df.shape[0]):
   row = df.iloc[r]
@@ -55,7 +55,7 @@ for r in range(df.shape[0]):
       pg = pages[key]
       if 'pageid' in pg:
         pageid = pg['pageid']
-        cur.execute(q, (pageid, title, lang))
+        cur.execute(q, (pageid, editid))
         conn.commit()
       else:
         print("Missing page: " + title)
@@ -109,11 +109,11 @@ for r in range(df2.shape[0]):
     # Pandas has the right encoding, but assigning it errors it
     title = row['title'].strip()
     if last_dt is None:
-        last_dt = datetime.datetime.strptime(start, '%Y-%m-%d') #datetime.datetime.now() - datetime.timedelta(365*10,0)
+        last_dt = start #datetime.datetime.now() - datetime.timedelta(365*10,0)
     else:
-        last_dt = datetime.datetime.combine(last_dt, datetime.time(0))
-    if first_dt is not None and first_dt > datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S').date():
-        last_dt = datetime.datetime.strptime(start, '%Y-%m-%d %H:%M:%S')
+        last_dt = datetime.datetime.combine(row['last_dt'], datetime.time(0))
+    if first_dt is not None and first_dt > start.to_datetime().date():
+        last_dt = start.to_datetime()
     current = last_dt
     st = str(last_dt.year) + str(last_dt.month).zfill(2) + str(last_dt.day).zfill(2)
     end = str(nnow.year) + str(nnow.month).zfill(2) + str(nnow.day).zfill(2)
