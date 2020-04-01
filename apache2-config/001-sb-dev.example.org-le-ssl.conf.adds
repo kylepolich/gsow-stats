@@ -1,0 +1,37 @@
+        ErrorDocument 401 /sb/unauthorized.php
+
+        OIDCProviderMetadataURL https://accounts.google.com/.well-known/openid-configuration
+        OIDCClientID REPLACE_WITH_VALUE_FROM_DEVELOPER_CONSOLE.apps.googleusercontent.com
+        OIDCClientSecret REPLACE_WITH_VALUE_FROM_DEVELOPER_CONSOLE
+        # OIDCRedirectURI must be *exactly* the same as permitted
+        # redirect URL in Google developer console
+        OIDCRedirectURI https://sb-dev.example.org/sb/oauth2_redirect
+        #OIDCCryptoPassphrase SOMETHING_LONG_AND_RANDOM_UNCOMMENT_ME
+        OIDCScope "openid profile email"
+        # This one causes the "email" claim value to appear in REMOTE_USER
+        OIDCRemoteUserClaim email
+
+        <Location /sb/login.php>
+                AuthType none
+        </Location>
+
+        <Location /sb/loggedout.php>
+                AuthType none
+        </Location>
+
+        <Location /sb/>
+                AuthType openid-connect
+                AuthGroupFile /var/local/gsow.groups
+                Require group editors
+        </Location>
+
+        <Location /sb/unauthorized.php>
+                AuthType openid-connect
+                Require valid-user
+        </Location>
+
+        <Location /sb/admin.php>
+                AuthType openid-connect
+                AuthGroupFile /var/local/gsow.groups
+                Require group admins
+        </Location>
