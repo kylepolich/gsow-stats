@@ -10,7 +10,7 @@ Frozen Header
   ini_set('display_startup_errors',1);
   error_reporting(-1);
   include("../config.php");
-  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
+  $conn = mysqli_connect($host, $user, $password, $dbname, $port);
   $conn->set_charset("utf8");
   $msg = "";
   if (isset($_POST['edit_id'])) {
@@ -18,7 +18,7 @@ Frozen Header
     $result = mysqli_query($conn, $q);
     //header( 'Location: index.php?msg=Delete+successful&tag=' + $_POST['tag'] ) ;
     //return;
-    $msg="<h2>Delete successed</h2>";
+    $msg="<h2>Delete successful</h2>";
   }
   include("header.php");
   $tag = "";
@@ -67,7 +67,7 @@ Frozen Header
     array_push($rows, $row);
   }
 
-  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 365 day) GROUP BY dt ORDER BY dt";
+  $q = "SELECT dt, sum(views) as views FROM page_views WHERE dt > DATE_SUB(NOW(), INTERVAl 90 day) GROUP BY dt ORDER BY dt";
   $dts = array();
   $views = array();
   array_push($dts, "Date");
@@ -85,23 +85,27 @@ Frozen Header
     echo("<center>" . $msg . "</center>");
   }
 ?>
-  <table>
+  <table style="font-size: 18pt;">
     <tr>
       <td>All time total:</td>
-      <td align='right'><?php echo(number_format($tot)); ?></td>
+      <td align='right'><strong><?php echo(number_format($tot)); ?></strong></td>
     </tr>
     <tr>
       <td>Total last 30 days:</td>
-      <td align='right'><?php echo(number_format($tot_30)); ?></td>
+      <td align='right'><strong><?php echo(number_format($tot_30)); ?></strong></td>
     </tr>
     <tr>
-      <td>Total last 1 days:</td>
-      <td align='right'><?php echo(number_format($tot_1)); ?></td>
+      <td>Total last 7 days:</td>
+      <td align='right'><strong><?php echo(number_format($tot_7)); ?></strong></td>
     </tr>
   </table>
 
-  <div id="views_timeseries"></div>
-
+  <center>
+  <div id="views_timeseries" style="width: 50%;">
+    <i id="click_for_chart" class="fas fa-chart-line fa-4x" title="Click to load time-series graph of views"></i>
+    <br/>
+  </div>
+  </center>
 
   <center>
   <form action='index.php' method='get' style='display: inline'>
@@ -156,7 +160,7 @@ Frozen Header
     echo("<tr>");
     echo("<td>" . $row['lang'] . "</td>");
     if ($row["pageid"] != null) {
-      echo("<td><a href='/gsow/page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . " (" . $row["tags"] . ")" . "</a></td>");
+      echo("<td><a href='page.php?pageid=" . $row["pageid"] . "'>" . $row["page"] . " (" . $row["tags"] . ")" . "</a></td>");
     } else {
       echo("<td>" . $row["page"] . "(" . $row["tags"] . ")" . " (ERROR: not found)</td>");
     }
@@ -204,14 +208,16 @@ $(document).ready(function() {
 		});
 
 	$("#myTable").tablesorter({headers : {4: {sorter: 'cn'}, 5: {sorter: 'cn'}, 3: {sorter: 'cn'} } });
+});
 
+$("#views_timeseries").click(function() {
   bb.generate({
       bindto: "#views_timeseries",
       data: {
           x: 'Date',
           columns: [ <?php echo(json_encode($dts)); ?>, <?php echo(json_encode($views)); ?> ]
       },
-      axis: { x: { type: 'timeseries', tick: { rotate: 90, format: '%Y-%m-%d' } } }
+      axis: { x: { type: 'timeseries', tick: { rotate: 45, format: '%Y-%m-%d' } } }
   });
 });
 

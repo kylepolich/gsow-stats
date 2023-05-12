@@ -3,6 +3,7 @@
   ini_set('display_errors',1);
   ini_set('display_startup_errors',1);
   error_reporting(-1);
+  $headers = apache_request_headers();
 ?>
 <!doctype html>
 
@@ -32,14 +33,32 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/billboard.js/1.1.1/billboard.min.css" rel="stylesheet" type="text/css" />
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+
 </head>
-<body>
+<body
+ <?php if (preg_match('/_dev$/', $dbname)) { ?>
+  style="background-image: url(images/devel_db.png);"
+ <?php } ?>
+>
 
 <h1>GSoW Page View Tracker</h1>
 
 <a href="index.php">Home</a>
 |
 <a href="admin.php">Admin</a>
+|
+<a href="<?php echo($oauth2_redir_url . '?logout=' . urlencode($logout_url)); ?>">
+<?php
+if (isset($headers["OIDC_CLAIM_picture"])) { ?>
+  <img alt="Log Out" title="Log Out <?php echo($headers["OIDC_CLAIM_email"]) ?>" width="32" height="32" src='<?php print $headers["OIDC_CLAIM_picture"]?>' />
+<?php
+} else { ?>
+  Log Out
+<?php
+}
+?>
+</a> 
 <!--
 |
 <a href="summary.php">Summary</a>

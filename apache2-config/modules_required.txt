@@ -1,0 +1,4 @@
+LoadModule auth_openidc_module /usr/lib/apache2/modules/mod_auth_openidc.so
+
+LoadModule authz_core_module /usr/lib/apache2/modules/mod_authz_core.so
+LoadModule authz_groupfile_module /usr/lib/apache2/modules/mod_authz_groupfile.so

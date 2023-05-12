@@ -1,6 +1,6 @@
 <?php
   include('../config.php');
-  $conn = mysqli_connect($host, $user, $password, "gsow", $port);
+  $conn = mysqli_connect($host, $user, $password, $dbname, $port);
   $conn->set_charset('utf8');
   ini_set('display_errors',1);
   ini_set('display_startup_errors',1);
